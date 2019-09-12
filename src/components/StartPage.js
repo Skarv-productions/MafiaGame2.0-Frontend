@@ -18,7 +18,14 @@ class StartPage extends Component {
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>
-          <Button variant="contained" size="large" color="primary">
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={() => {
+              this.props.changePage("GameLobby");
+            }}
+          >
             Create Game
           </Button>
         </Grid>
