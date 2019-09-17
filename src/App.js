@@ -5,13 +5,16 @@ import AdminPanel from "./components/AdminPanel";
 import ShowRole from "./components/ShowRole";
 import NightMode from "./components/NightMode";
 import NormalMafia from "./components/NormalMafia";
+import MafiaBoss from "./components/MafiaBoss";
+import MafiaKilled from "./components/MafiaKilled";
 
 import "./App.css";
 
 class App extends Component {
   state = {
     page: "StartPage",
-    playerList: ["Matt", "Mark", "Luke", "John"]
+    playerList: ["Matt", "Mark", "Luke", "John"],
+    mafiaChose: "Micke"
   };
 
   changePage = page => {
@@ -50,6 +53,12 @@ class App extends Component {
 
       case "NormalMafia":
         return <NormalMafia mafiaBoss="Marvin" />;
+
+      case "MafiaBoss":
+        return <MafiaBoss players={this.state.playerList} />;
+
+      case "MafiaKilled":
+        return <MafiaKilled mafiaChose={this.state.mafiaChose} />;
     }
   }
 }
