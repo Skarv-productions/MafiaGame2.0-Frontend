@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
-class GameLobby extends Component {
+class ShowRole extends Component {
   state = {};
 
   render() {
@@ -18,20 +18,16 @@ class GameLobby extends Component {
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>
-          <Typography variant="h3">Game Lobby</Typography>
+          <Typography variant="h5">You are a</Typography>
         </Grid>
         <Grid item>
-          <Typography variant="h5">Playerlist</Typography>
+          <Typography color="secondary" variant="h3">
+            {this.props.role}
+          </Typography>
         </Grid>
-
-        {this.props.players.map(player => (
-          <Grid item>
-            <Typography variant="h6">{player}</Typography>
-          </Grid>
-        ))}
       </Grid>
     );
   }
 }
 
-export default GameLobby;
+export default ShowRole;
