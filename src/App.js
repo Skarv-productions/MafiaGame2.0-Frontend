@@ -7,6 +7,8 @@ import NightMode from "./components/NightMode";
 import NormalMafia from "./components/NormalMafia";
 import MafiaBoss from "./components/MafiaBoss";
 import MafiaKilled from "./components/MafiaKilled";
+import DoctorNight from "./components/DoctorNight";
+import DoctorSaved from "./components/DoctorSaved";
 
 import "./App.css";
 
@@ -14,7 +16,8 @@ class App extends Component {
   state = {
     page: "StartPage",
     playerList: ["Matt", "Mark", "Luke", "John"],
-    mafiaChose: "Micke"
+    mafiaChose: "Micke",
+    doctorChose: "Micke"
   };
 
   changePage = page => {
@@ -59,6 +62,12 @@ class App extends Component {
 
       case "MafiaKilled":
         return <MafiaKilled mafiaChose={this.state.mafiaChose} />;
+
+      case "DoctorNight":
+        return <DoctorNight players={this.state.playerList} />;
+
+      case "DoctorSaved":
+        return <DoctorSaved doctorChose={this.state.doctorChose} />;
     }
   }
 }
