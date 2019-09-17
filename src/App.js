@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import StartPage from "./components/StartPage";
 import GameLobby from "./components/GameLobby";
+import AdminPanel from "./components/AdminPanel";
 import "./App.css";
 
 class App extends Component {
@@ -19,6 +20,9 @@ class App extends Component {
 
       case "GameLobby":
         return <GameLobby changePage={this.changePage} />;
+
+      case "AdminPanel":
+        return <AdminPanel />;
     }
   }
 }
