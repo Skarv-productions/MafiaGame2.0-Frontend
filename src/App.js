@@ -9,6 +9,7 @@ import MafiaBoss from "./components/MafiaBoss";
 import MafiaKilled from "./components/MafiaKilled";
 import DoctorNight from "./components/DoctorNight";
 import DoctorSaved from "./components/DoctorSaved";
+import SheriffNight from "./components/SheriffNight";
 
 import "./App.css";
 
@@ -68,6 +69,9 @@ class App extends Component {
 
       case "DoctorSaved":
         return <DoctorSaved doctorChose={this.state.doctorChose} />;
+
+      case "SheriffNight":
+        return <SheriffNight players={this.state.playerList} />;
     }
   }
 }
