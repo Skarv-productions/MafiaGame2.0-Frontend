@@ -10,15 +10,23 @@ import MafiaKilled from "./components/MafiaKilled";
 import DoctorNight from "./components/DoctorNight";
 import DoctorSaved from "./components/DoctorSaved";
 import SheriffNight from "./components/SheriffNight";
+import SheriffChecked from "./components/SheriffChecked";
 
 import "./App.css";
 
 class App extends Component {
   state = {
     page: "StartPage",
-    playerList: ["Matt", "Mark", "Luke", "John"],
+    playerList: [
+      { name: "Matt", role: "farmer", status: "alive" },
+      { name: "Mark", role: "farmer", status: "alive" },
+      { name: "Luke", role: "farmer", status: "alive" },
+      { name: "John", role: "farmer", status: "alive" },
+      { name: "Micke", role: "mafia", status: "alive" }
+    ],
     mafiaChose: "Micke",
-    doctorChose: "Micke"
+    doctorChose: "Micke",
+    sheriffChose: "Micke"
   };
 
   changePage = page => {
@@ -72,6 +80,14 @@ class App extends Component {
 
       case "SheriffNight":
         return <SheriffNight players={this.state.playerList} />;
+
+      case "SheriffChecked":
+        return (
+          <SheriffChecked
+            sheriffChose={this.state.sheriffChose}
+            players={this.state.playerList}
+          />
+        );
     }
   }
 }
