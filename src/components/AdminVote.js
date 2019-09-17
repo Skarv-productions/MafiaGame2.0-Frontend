@@ -3,15 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
-class DoctorNight extends Component {
-  state = {
-    language: "Swe",
-    text: [
-      { lang: "Swe", content: "Vem vill du rädda?" },
-      { lang: "Eng", content: "Who do you want to save?" },
-      { lang: "Tung", content: "Shokiraba shando lababa?" }
-    ]
-  };
+class AdminVote extends Component {
+  state = {};
 
   render() {
     return (
@@ -24,24 +17,24 @@ class DoctorNight extends Component {
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>
-          <Typography variant="h3">
-            {
-              this.state.text.find(text => text.lang === this.state.language)
-                .content
-            }
-          </Typography>
+          <Typography variant="h3">Who do you want to vote out?</Typography>
         </Grid>
 
         {this.props.players.map(player => (
           <Grid item>
-            <Button variant="contained" size="large" color="primary">
+            <Button variant="contained" size="large">
               {player.name}
             </Button>
           </Grid>
         ))}
+        <Grid item>
+          <Button variant="contained" size="large">
+            None
+          </Button>
+        </Grid>
       </Grid>
     );
   }
 }
 
-export default DoctorNight;
+export default AdminVote;

@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
-class GameLobby extends Component {
+class NightReport extends Component {
   state = {};
 
   render() {
+    const mafiaChose = this.props.mafiaChose;
+    const doctorChose = this.props.doctorChose;
     return (
       <Grid
         container
@@ -16,20 +18,14 @@ class GameLobby extends Component {
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>
-          <Typography variant="h3">Game Lobby</Typography>
+          <Typography variant="h4">
+            {mafiaChose} was {mafiaChose === doctorChose ? "saved" : "killed"}{" "}
+            during the night
+          </Typography>
         </Grid>
-        <Grid item>
-          <Typography variant="h5">Playerlist</Typography>
-        </Grid>
-
-        {this.props.players.map(player => (
-          <Grid item>
-            <Typography variant="h6">{player.name}</Typography>
-          </Grid>
-        ))}
       </Grid>
     );
   }
 }
 
-export default GameLobby;
+export default NightReport;

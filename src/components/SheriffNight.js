@@ -35,7 +35,7 @@ class SheriffNight extends Component {
         {this.props.players.map(player => (
           <Grid item>
             <Button variant="contained" size="large" color="primary">
-              {player}
+              {player.name}
             </Button>
           </Grid>
         ))}

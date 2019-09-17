@@ -11,6 +11,8 @@ import DoctorNight from "./components/DoctorNight";
 import DoctorSaved from "./components/DoctorSaved";
 import SheriffNight from "./components/SheriffNight";
 import SheriffChecked from "./components/SheriffChecked";
+import NightReport from "./components/NightReport";
+import AdminVote from "./components/AdminVote";
 
 import "./App.css";
 
@@ -88,6 +90,17 @@ class App extends Component {
             players={this.state.playerList}
           />
         );
+
+      case "NightReport":
+        return (
+          <NightReport
+            mafiaChose={this.state.mafiaChose}
+            doctorChose={this.state.doctorChose}
+          />
+        );
+
+      case "AdminVote":
+        return <AdminVote players={this.state.playerList} />;
     }
   }
 }

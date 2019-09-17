@@ -23,7 +23,7 @@ class NormalMafia extends Component {
         {this.props.players.map(player => (
           <Grid item>
             <Button variant="contained" size="large" color="secondary">
-              {player}
+              {player.name}
             </Button>
           </Grid>
         ))}
