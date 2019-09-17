@@ -4,6 +4,7 @@ import GameLobby from "./components/GameLobby";
 import AdminPanel from "./components/AdminPanel";
 import ShowRole from "./components/ShowRole";
 import NightMode from "./components/NightMode";
+import NormalMafia from "./components/NormalMafia";
 
 import "./App.css";
 
@@ -45,7 +46,10 @@ class App extends Component {
         return <ShowRole role="mafia" />;
 
       case "NightMode":
-        return <NightMode role="mafia" />;
+        return <NightMode />;
+
+      case "NormalMafia":
+        return <NormalMafia mafiaBoss="Marvin" />;
     }
   }
 }
