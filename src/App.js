@@ -3,6 +3,8 @@ import StartPage from "./components/StartPage";
 import GameLobby from "./components/GameLobby";
 import AdminPanel from "./components/AdminPanel";
 import ShowRole from "./components/ShowRole";
+import NightMode from "./components/NightMode";
+
 import "./App.css";
 
 class App extends Component {
@@ -41,6 +43,9 @@ class App extends Component {
 
       case "ShowRole":
         return <ShowRole role="mafia" />;
+
+      case "NightMode":
+        return <NightMode role="mafia" />;
     }
   }
 }
