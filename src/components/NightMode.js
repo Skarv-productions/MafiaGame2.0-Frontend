@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import ReactPlayer from "react-player";
+import SleepCity from "../audio/SleepCity.mp3";
 
 class NightMode extends Component {
   state = {};
@@ -18,6 +20,8 @@ class NightMode extends Component {
         <Grid item>
           <Typography variant="h3">Go to sleep</Typography>
         </Grid>
+
+        <ReactPlayer url={SleepCity} playing={true} />
       </Grid>
     );
   }
