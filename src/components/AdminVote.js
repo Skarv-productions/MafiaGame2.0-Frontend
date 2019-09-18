@@ -22,13 +22,25 @@ class AdminVote extends Component {
 
         {this.props.players.map(player => (
           <Grid item>
-            <Button variant="contained" size="large">
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => {
+                this.props.onKill(player.name);
+              }}
+            >
               {player.name}
             </Button>
           </Grid>
         ))}
         <Grid item>
-          <Button variant="contained" size="large">
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => {
+              this.props.onKill("none");
+            }}
+          >
             None
           </Button>
         </Grid>

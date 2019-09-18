@@ -34,7 +34,14 @@ class SheriffNight extends Component {
 
         {this.props.players.map(player => (
           <Grid item>
-            <Button variant="contained" size="large" color="primary">
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              onClick={() => {
+                this.props.sheriffCheck(player);
+              }}
+            >
               {player.name}
             </Button>
           </Grid>

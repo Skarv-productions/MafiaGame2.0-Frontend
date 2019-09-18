@@ -34,7 +34,14 @@ class DoctorNight extends Component {
 
         {this.props.players.map(player => (
           <Grid item>
-            <Button variant="contained" size="large" color="primary">
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              onClick={() => {
+                this.props.doctorMark(player);
+              }}
+            >
               {player.name}
             </Button>
           </Grid>
