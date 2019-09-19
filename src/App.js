@@ -26,6 +26,10 @@ class App extends Component {
       { name: "John", role: "farmer", status: "dead" },
       { name: "Micke", role: "mafia", status: "alive" }
     ],
+    game: {
+      id: 1,
+      code: "ABCD"
+    },
     mafiaChose: "",
     doctorChose: "",
     sheriffChose: ""
@@ -51,6 +55,16 @@ class App extends Component {
     this.setState({ sheriffChose: player.name });
   };
 
+  createGame = name => {
+    const newPlayer = { name: name, role: "", status: "alive" };
+
+    this.setState(prevState => {
+      let newList = prevState.playerList;
+      newList.push(newPlayer);
+      return { playerList: newList };
+    });
+  };
+
   kill = name => {
     this.setState(prevState => ({
       playerList: prevState.playerList.map(player =>
@@ -65,7 +79,7 @@ class App extends Component {
   render() {
     switch (this.state.page) {
       case "StartPage":
-        return <StartPage changePage={this.changePage} />;
+        return <StartPage createGame={this.createGame} />;
 
       case "GameLobby":
         return (
