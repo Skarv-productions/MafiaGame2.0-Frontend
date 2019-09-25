@@ -18,6 +18,14 @@ class GameLobby extends Component {
         <Grid item>
           <Typography variant="h3">Game Lobby</Typography>
         </Grid>
+
+        <Grid item>
+          <Typography variant="h5">Game code:</Typography>
+          <Typography variant="h5" color="primary">
+            {this.props.game.code}
+          </Typography>
+        </Grid>
+
         <Grid item>
           <Typography variant="h5">Playerlist</Typography>
         </Grid>

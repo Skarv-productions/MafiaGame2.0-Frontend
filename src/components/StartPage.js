@@ -3,6 +3,10 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
 
 class StartPage extends Component {
   state = {
@@ -19,21 +23,30 @@ class StartPage extends Component {
       <Grid
         container
         direction="column"
-        alignItems="stretch"
         justify="center"
         spacing={4}
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>
+          <Typography variant="h2">Mafia Game</Typography>
+        </Grid>
+
+        <Grid item>
           <Typography variant="h6">What's your name?</Typography>
         </Grid>
 
         <Grid item>
-          <TextField
-            onChange={this.onChange}
-            name="name"
-            placeholder="Write your name here"
-          ></TextField>
+          <FormControl error={this.props.nameError.active}>
+            <Input
+              id="component-error"
+              placeholder="Write your name here"
+              onChange={this.onChange}
+              name="name"
+            />
+            <FormHelperText id="component-error-text">
+              {this.props.nameError.text}
+            </FormHelperText>
+          </FormControl>
         </Grid>
 
         <Grid item>
@@ -57,15 +70,26 @@ class StartPage extends Component {
         </Grid>
 
         <Grid item>
-          <TextField
-            onChange={this.onChange}
-            name="code"
-            placeholder="Write game code here"
-          ></TextField>
+          <FormControl error={this.props.codeError.active}>
+            <Input
+              id="component-error"
+              placeholder="Write game code here"
+              onChange={this.onChange}
+              name="code"
+            />
+            <FormHelperText>{this.props.codeError.text}</FormHelperText>
+          </FormControl>
         </Grid>
 
         <Grid item>
-          <Button variant="contained" size="large" color="primary">
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={() => {
+              this.props.joinGame(this.state.code, this.state.name);
+            }}
+          >
             Join Game
           </Button>
         </Grid>

@@ -1,7 +1,10 @@
+@import url("https://fonts.googleapis.com/css?family=Mansalva&display=swap");
+
 html,
 body {
   height: 98vh;
   font-size: 20px;
-  background-color: #f65d91;
+  background-color: #bea5ab;
   width: 98%;
+  font-family: "Mansalva", cursive;
 }

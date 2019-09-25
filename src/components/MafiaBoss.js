@@ -20,20 +20,28 @@ class NormalMafia extends Component {
           <Typography variant="h3">Who do you want to kill?</Typography>
         </Grid>
 
-        {this.props.players.map(player => (
-          <Grid item>
-            <Button
-              variant="contained"
-              size="large"
-              color="secondary"
-              onClick={() => {
-                this.props.mafiaMark(player);
-              }}
-            >
-              {player.name}
-            </Button>
-          </Grid>
-        ))}
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justify="center"
+          spacing={4}
+        >
+          {this.props.players.map(player => (
+            <Grid item>
+              <Button
+                variant="contained"
+                size="large"
+                color="secondary"
+                onClick={() => {
+                  this.props.mafiaMark(player);
+                }}
+              >
+                {player.name}
+              </Button>
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     );
   }
