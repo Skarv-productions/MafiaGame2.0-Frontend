@@ -22,26 +22,23 @@ class App extends Component {
     page: "StartPage",
     player: { name: "", role: "", status: "" },
     playerList: [
-      { name: "Matt", role: "farmer", status: "alive" },
-      { name: "Mark", role: "farmer", status: "alive" },
-      { name: "Luke", role: "farmer", status: "alive" },
-      { name: "John", role: "farmer", status: "dead" },
-      { name: "Micke", role: "mafia", status: "alive" }
+      { name: "MATT", role: "farmer", status: "alive", admin: false }
     ],
     game: {
       id: 0,
       code: ""
     },
     gameList: [
-      { id: 1, code: "ABCD" },
-      { id: 2, code: "QWER" },
-      { id: 3, code: "ASDF" },
-      { id: 4, code: "ZXCV" },
-      { id: 5, code: "TYUI" },
-      { id: 6, code: "GHJK" },
-      { id: 7, code: "BNMM" },
-      { id: 8, code: "JJJJ" }
+      { id: 1, code: "ABCD", status: "open" },
+      { id: 2, code: "QWER", status: "open" },
+      { id: 3, code: "ASDF", status: "open" },
+      { id: 4, code: "ZXCV", status: "open" },
+      { id: 5, code: "TYUI", status: "open" },
+      { id: 6, code: "GHJK", status: "open" },
+      { id: 7, code: "BNMM", status: "open" },
+      { id: 8, code: "JJJJ", status: "closed" }
     ],
+    roles: { mafia: 0, doctor: 0, sheriff: 0 },
     mafiaChose: "",
     doctorChose: "",
     sheriffChose: "",
@@ -72,7 +69,7 @@ class App extends Component {
   // When Create Game button is pressed
   createGame = name => {
     // Make sure name is ok
-    if (this.addPlayer(name)) {
+    if (this.addPlayer(name, true)) {
       // Find the highest gameId in gameList
       const latestId = Math.max.apply(
         Math,
@@ -88,7 +85,7 @@ class App extends Component {
       }
 
       // Add game to gameList
-      const game = { id: latestId + 1, code: code };
+      const game = { id: latestId + 1, code: code, status: "open" };
       this.setState(prevState => {
         let newList = prevState.gameList;
         newList.push(game);
@@ -98,64 +95,88 @@ class App extends Component {
       // Save our game in state and move on
       this.setState({ game: game, page: "AdminPanel" });
     }
-    // If name is not ok
-    else {
-      this.setState({ nameError: { active: true, text: "Please enter name" } });
-    }
   };
 
-  addPlayer = name => {
+  addPlayer = (name, admin) => {
     if (name !== "") {
-      // Insert new player in playerList
-      const newPlayer = { name: name, role: "", status: "alive" };
+      // Make sure name is not already taken
+      if (
+        !this.state.playerList.find(player => {
+          return player.name === name;
+        })
+      ) {
+        // Insert new player in playerList
+        const newPlayer = {
+          name: name,
+          role: "",
+          status: "alive",
+          admin: admin
+        };
 
-      this.setState(prevState => {
-        let newPlayerList = prevState.playerList;
-        newPlayerList.push(newPlayer);
+        this.setState(prevState => {
+          let newPlayerList = prevState.playerList;
+          newPlayerList.push(newPlayer);
 
-        return { playerList: newPlayerList };
-      });
+          return { playerList: newPlayerList };
+        });
 
-      // Save our player
-      this.setState({ player: newPlayer });
+        // Save our player
+        this.setState({ player: newPlayer });
 
-      // Remove nameError
-      this.setState({ nameError: { active: false, text: "" } });
+        // Remove nameError
+        this.setState({ nameError: { active: false, text: "" } });
 
-      return true;
+        return true;
+      } else {
+        this.setState({
+          nameError: { active: true, text: "Name is already taken" }
+        });
+      }
     } else {
+      this.setState({ nameError: { active: true, text: "Please enter name" } });
       return false;
     }
   };
 
   joinGame = (code, name) => {
-    // Make sure name is ok
-    if (this.addPlayer(name)) {
-      // Make sure code is not empty
-      if (code !== "") {
-        // Look for game with code
-        const ourGame = this.state.gameList.find(game => {
-          return game.code === code;
-        });
-        if (ourGame) {
+    // Make sure code is not empty
+    if (code !== "") {
+      // Look for game with code
+      const ourGame = this.state.gameList.find(game => {
+        return game.code === code && game.status === "open";
+      });
+
+      // If code was found
+      if (ourGame) {
+        // Try to save player
+        if (this.addPlayer(name, false)) {
           // Save our game and move on
           this.setState({ game: ourGame, page: "GameLobby" });
         }
-        // If code wasn't correct
+
+        // If name is not ok
         else {
-          this.setState({ codeError: { active: true, text: "Code is wrong" } });
+          this.setState({
+            codeError: { active: false, text: "" }
+          });
         }
       }
-      // If code is empty
+
+      // If code wasn't correct
       else {
         this.setState({
-          codeError: { active: true, text: "Please enter code to join game" }
+          codeError: { active: true, text: "Code is wrong" },
+          nameError: { active: false, text: "" }
         });
       }
     }
-    // If name is not ok
+
+    // If code is empty
     else {
-      this.setState({ nameError: { active: true, text: "Please enter name" } });
+      this.setState({
+        codeError: { active: true, text: "Please enter code to join game" },
+        nameError: { active: false, text: "" }
+      });
     }
   };
 
@@ -169,6 +190,8 @@ class App extends Component {
     }));
     console.log("You voted to kill", name);
   };
+
+  startGame = roles => {};
 
   THEME = createMuiTheme({
     typography: {
@@ -209,7 +232,10 @@ class App extends Component {
               players={this.state.playerList.filter(this.isAlive)}
               game={this.state.game}
             />
-            <AdminPanel />
+            <AdminPanel
+              startGame={this.startGame}
+              players={this.state.playerList}
+            />
           </React.Fragment>
         );
 
@@ -273,6 +299,16 @@ class App extends Component {
           <AdminVote
             players={this.state.playerList.filter(this.isAlive)}
             onKill={this.kill}
+          />
+        );
+
+      default:
+        return (
+          <StartPage
+            createGame={this.createGame}
+            nameError={this.state.nameError}
+            codeError={this.state.codeError}
+            joinGame={this.joinGame}
           />
         );
     }

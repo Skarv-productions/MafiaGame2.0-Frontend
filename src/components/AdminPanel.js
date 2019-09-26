@@ -6,17 +6,60 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import { Button } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
 
 class AdminPanel extends Component {
   state = {
-    mafia: 1,
-    sheriff: 0,
-    doctor: 0
+    roles: {
+      mafia: 1,
+      sheriff: 0,
+      doctor: 0
+    },
+    numbers: [
+      "None",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+      "Ten",
+      "Eleven",
+      "Twelve"
+    ],
+    locked: this.props.players.length > 2 ? false : true
   };
 
   handleChange = event => {
-    console.log("CHange!");
-    this.setState({ [event.target.name]: event.target.value });
+    console.log("Change!");
+    this.setState(prevState => ({
+      roles: Object.assign(prevState.roles, {
+        [event.target.name]: event.target.value
+      })
+    }));
+  };
+
+  mafiaMenuItems = () => {
+    let menuItems = [];
+
+    const players = this.props.players.length;
+
+    if (players > 2) {
+      for (let i = 2; i <= Math.ceil(players / 2) - 1; i++) {
+        menuItems.push(<MenuItem value={i}>{this.state.numbers[i]}</MenuItem>);
+      }
+    }
+
+    return menuItems;
+  };
+
+  getTooltip = () => {
+    if (this.state.locked) {
+      return "open=false";
+    }
   };
 
   render() {
@@ -38,18 +81,11 @@ class AdminPanel extends Component {
             <Select
               style={{ width: "200px" }}
               onChange={this.handleChange}
-              value={this.state.mafia}
+              value={this.state.roles.mafia}
               name="mafia"
             >
               <MenuItem value={1}>One</MenuItem>
-              <MenuItem value={2}>Two</MenuItem>
-              <MenuItem value={3}>Three</MenuItem>
-              <MenuItem value={4}>Four</MenuItem>
-              <MenuItem value={5}>Five</MenuItem>
-              <MenuItem value={6}>Six</MenuItem>
-              <MenuItem value={7}>Seven</MenuItem>
-              <MenuItem value={8}>Eight</MenuItem>
-              <MenuItem value={9}>Nine</MenuItem>
+              {this.mafiaMenuItems()}
             </Select>
           </FormControl>
         </Grid>
@@ -60,7 +96,7 @@ class AdminPanel extends Component {
             <Select
               style={{ width: "200px" }}
               onChange={this.handleChange}
-              value={this.state.sheriff}
+              value={this.state.roles.sheriff}
               name="sheriff"
             >
               <MenuItem value={0}>None</MenuItem>
@@ -75,7 +111,7 @@ class AdminPanel extends Component {
             <Select
               style={{ width: "200px" }}
               onChange={this.handleChange}
-              value={this.state.doctor}
+              value={this.state.roles.doctor}
               name="doctor"
             >
               <MenuItem value={0}>None</MenuItem>
@@ -85,9 +121,21 @@ class AdminPanel extends Component {
         </Grid>
 
         <Grid item>
-          <Button variant="contained" size="large" color="secondary">
-            Start Game
-          </Button>
+          <Tooltip title="You need atleast 3 players" open={this.state.locked}>
+            <span>
+              <Button
+                variant="contained"
+                size="large"
+                color="secondary"
+                disabled={this.state.locked}
+                onClick={() => {
+                  this.props.startGame(this.state.roles);
+                }}
+              >
+                Start Game
+              </Button>
+            </span>
+          </Tooltip>
         </Grid>
       </Grid>
     );

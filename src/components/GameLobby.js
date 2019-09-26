@@ -32,7 +32,12 @@ class GameLobby extends Component {
 
         {this.props.players.map(player => (
           <Grid item>
-            <Typography variant="h6">{player.name}</Typography>
+            <Typography
+              color={player.admin ? "primary" : "inherit"}
+              variant="h6"
+            >
+              {player.name}
+            </Typography>
           </Grid>
         ))}
       </Grid>
