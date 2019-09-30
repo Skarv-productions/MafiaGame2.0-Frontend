@@ -20,9 +20,12 @@ import "./App.css";
 class App extends Component {
   state = {
     page: "StartPage",
-    player: { name: "", role: "", status: "" },
+    player: { name: "", role: "", status: "", admin: false },
     playerList: [
-      { name: "MATT", role: "farmer", status: "alive", admin: false }
+      { name: "MATT", role: "farmer", status: "alive", admin: false },
+      { name: "BAJS", role: "farmer", status: "alive", admin: false },
+      { name: "KEBAB", role: "farmer", status: "alive", admin: false },
+      { name: "Lol", role: "farmer", status: "alive", admin: false }
     ],
     game: {
       id: 0,
@@ -71,9 +74,8 @@ class App extends Component {
     // Make sure name is ok
     if (this.addPlayer(name, true)) {
       // Find the highest gameId in gameList
-      const latestId = Math.max.apply(
-        Math,
-        this.state.gameList.map(game => {
+      const latestId = Math.max(
+        ...this.state.gameList.map(game => {
           return game.id;
         })
       );
@@ -131,6 +133,7 @@ class App extends Component {
         this.setState({
           nameError: { active: true, text: "Name is already taken" }
         });
+        return false;
       }
     } else {
       this.setState({ nameError: { active: true, text: "Please enter name" } });
@@ -191,7 +194,57 @@ class App extends Component {
     console.log("You voted to kill", name);
   };
 
-  startGame = roles => {};
+  // Both admin and normal players will call this
+  startGame = roles => {
+    // If admin, then assign role
+    // if(this.state.player.admin) {
+    //   this.assignRoles(roles);
+    // }
+    // If normal player, wait/get role
+  };
+
+  assignRoles = roles => {
+    // console.log("Assigning roles...");
+    // let farmers = this.state.playerList;
+    // let chosen = [];
+    // console.log("Amount of Mafias this game: " + roles.mafia);
+    // console.log("Doctor: " + roles.doctor);
+    // console.log("Sheriff: " + roles.sheriff);
+    // // Assign Maffia
+    // console.log("Time to assign Mafias ");
+    // for (i = 0; i < numMafia; i++) {
+    //     chosen = Math.floor(Math.random() * (farmers.length));
+    //     console.log("I just chose " + farmers[chosen]);
+    //     console.log( farmers[chosen] + " was assigned to be a Mafia");
+    //     mafia.push(farmers[chosen]);
+    //     farmers.splice(chosen, 1);
+    // }
+    // console.log("These are the Mafias");
+    // console.log(mafia);
+    // // Assign Doctor
+    // if (doctor) {
+    //     console.log("Time to assign Doctor");
+    //     chosen = Math.floor(Math.random() * (farmers.length));
+    //     doctorName = farmers[chosen];
+    //     farmers.splice(chosen, 1);
+    //     console.log("Doctor: " + doctorName);
+    //     }
+    //     else {
+    //         console.log("Not assigning Doctor this game.");
+    //     }
+    // // Assign Sheriff
+    // if (sheriff) {
+    //     chosen = Math.floor(Math.random() * (farmers.length));
+    //     console.log("Time to assign Sheriff");
+    //     sheriffName = farmers[chosen];
+    //     console.log("Just assigned " + farmers[chosen] + " as the Sheriff.");
+    //     farmers.splice(chosen, 1);
+    //     console.log("Sheriff: " + sheriff);
+    // }
+    // else {
+    //     console.log("Not assigning Sheriff this game.");
+    // }
+  };
 
   THEME = createMuiTheme({
     typography: {

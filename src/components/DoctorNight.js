@@ -20,7 +20,7 @@ class DoctorNight extends Component {
         direction="column"
         alignItems="center"
         justify="center"
-        spacing={4}
+        spacing={10}
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>
@@ -32,20 +32,28 @@ class DoctorNight extends Component {
           </Typography>
         </Grid>
 
-        {this.props.players.map(player => (
-          <Grid item>
-            <Button
-              variant="contained"
-              size="large"
-              color="primary"
-              onClick={() => {
-                this.props.doctorMark(player);
-              }}
-            >
-              {player.name}
-            </Button>
-          </Grid>
-        ))}
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justify="center"
+          spacing={4}
+        >
+          {this.props.players.map(player => (
+            <Grid item>
+              <Button
+                variant="contained"
+                size="large"
+                color="primary"
+                onClick={() => {
+                  this.props.doctorMark(player);
+                }}
+              >
+                {player.name}
+              </Button>
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     );
   }

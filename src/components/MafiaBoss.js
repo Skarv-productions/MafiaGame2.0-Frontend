@@ -13,7 +13,7 @@ class NormalMafia extends Component {
         direction="column"
         alignItems="center"
         justify="center"
-        spacing={4}
+        spacing={10}
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>

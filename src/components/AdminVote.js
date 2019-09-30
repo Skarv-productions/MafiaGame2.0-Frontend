@@ -13,36 +13,44 @@ class AdminVote extends Component {
         direction="column"
         alignItems="center"
         justify="center"
-        spacing={4}
+        spacing={10}
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>
           <Typography variant="h3">Who do you want to vote out?</Typography>
         </Grid>
 
-        {this.props.players.map(player => (
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justify="center"
+          spacing={4}
+        >
+          {this.props.players.map(player => (
+            <Grid item>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => {
+                  this.props.onKill(player.name);
+                }}
+              >
+                {player.name}
+              </Button>
+            </Grid>
+          ))}
           <Grid item>
             <Button
               variant="contained"
               size="large"
               onClick={() => {
-                this.props.onKill(player.name);
+                this.props.onKill("none");
               }}
             >
-              {player.name}
+              None
             </Button>
           </Grid>
-        ))}
-        <Grid item>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => {
-              this.props.onKill("none");
-            }}
-          >
-            None
-          </Button>
         </Grid>
       </Grid>
     );
