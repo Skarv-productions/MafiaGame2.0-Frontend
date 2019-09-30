@@ -21,9 +21,23 @@ class ShowRole extends Component {
           <Typography variant="h5">You are a</Typography>
         </Grid>
         <Grid item>
-          <Typography color="secondary" variant="h3">
-            {this.props.role}
+          <Typography
+            color={this.props.player.role === "mafia" ? "secondary" : "primary"}
+            variant="h3"
+          >
+            {this.props.player.role}
           </Typography>
+        </Grid>
+
+        <Grid item>
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={this.props.next}
+          >
+            OK
+          </Button>
         </Grid>
       </Grid>
     );

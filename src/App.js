@@ -14,8 +14,26 @@ import SheriffChecked from "./components/SheriffChecked";
 import NightReport from "./components/NightReport";
 import AdminVote from "./components/AdminVote";
 import RandomString from "random-string";
+import WaitPage from "./components/WaitPage";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import "./App.css";
+
+/* ------- DOCUMENTATION -------
+Game statuses:
+open - Game is created and waiting for players
+started - Game has started and you can't join, role should be assigned
+assigned - Roles have been assigned
+night - It's time to go to sleep
+mafia - Time for mafia to kill
+doctor - Time for doctor to heal
+sheriff - Sheriff is investigating
+day - Daytime! Report and vote
+closed - Game over!
+
+
+
+
+*/
 
 class App extends Component {
   state = {
@@ -201,44 +219,28 @@ class App extends Component {
       this.assignRoles(roles);
     }
     // If normal player, wait/get role
+    this.updateMyPlayer();
+    this.setState({ page: "ShowRole" });
   };
 
   assignRoles = roles => {
-    console.log("Assigning roles...");
-
     let farmers = this.state.playerList.slice();
     let chosen = [];
     let mafias = [];
 
-    console.log("Amount of Mafias this game: " + roles.mafia);
-    console.log("Doctor: " + roles.doctor);
-    console.log("Sheriff: " + roles.sheriff);
-
     // Assign Maffia
-    console.log("Time to assign Mafias ");
-
     for (let i = 0; i < roles.mafia; i++) {
       chosen = Math.floor(Math.random() * farmers.length);
-
-      console.log("I just chose " + farmers[chosen].name);
-      console.log(farmers[chosen].name + " was assigned to be a Mafia");
 
       mafias.push(farmers[chosen]);
       farmers.splice(chosen, 1);
     }
 
-    console.log("These are the Mafias");
-    console.log(mafias);
-
     // Update state playerList with mafia roles
     let newPlayerList = this.state.playerList.slice();
-    console.log(newPlayerList);
 
     mafias.map(mafia => {
-      console.log(mafia);
       const mafiaIndex = newPlayerList.indexOf(mafia);
-
-      console.log(mafia.name, "was found at index", mafiaIndex);
 
       Object.assign(newPlayerList[mafiaIndex], { role: "mafia" });
     });
@@ -247,13 +249,9 @@ class App extends Component {
 
     // Assign Doctor
     if (roles.doctor) {
-      console.log("Time to assign Doctor");
-
       chosen = Math.floor(Math.random() * farmers.length);
       let doctor = farmers[chosen];
       farmers.splice(chosen, 1);
-
-      console.log("Doctor: " + doctor.name);
 
       // Update state playerList with doctor role
       this.setState(prevState => ({
@@ -263,23 +261,15 @@ class App extends Component {
             : player;
         })
       }));
-    } else {
-      console.log("Not assigning Doctor this game.");
     }
 
     // Assign Sheriff
     if (roles.sheriff) {
       chosen = Math.floor(Math.random() * farmers.length);
 
-      console.log("Time to assign Sheriff");
-
       let sheriff = farmers[chosen];
 
-      console.log("Just assigned " + farmers[chosen].name + " as the Sheriff.");
-
       farmers.splice(chosen, 1);
-
-      console.log("Sheriff: " + sheriff.name);
 
       // Update state playerList with doctor role
       this.setState(prevState => ({
@@ -289,9 +279,20 @@ class App extends Component {
             : player;
         })
       }));
-    } else {
-      console.log("Not assigning Sheriff this game.");
     }
+  };
+
+  // Updates the current player with data from playerList
+  updateMyPlayer = () => {
+    const me = this.state.playerList.find(player => {
+      return player.name === this.state.player.name;
+    });
+    this.setState({ player: me });
+  };
+
+  // Load/Wait screen
+  wait = () => {
+    this.changePage("WaitPage");
   };
 
   THEME = createMuiTheme({
@@ -341,7 +342,7 @@ class App extends Component {
         );
 
       case "ShowRole":
-        return <ShowRole role="mafia" />;
+        return <ShowRole player={this.state.player} next={this.wait} />;
 
       case "NightMode":
         return <NightMode />;
@@ -402,6 +403,9 @@ class App extends Component {
             onKill={this.kill}
           />
         );
+
+      case "WaitPage":
+        return <WaitPage />;
 
       default:
         return (
