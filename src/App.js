@@ -110,7 +110,7 @@ class App extends Component {
         // Insert new player in playerList
         const newPlayer = {
           name: name,
-          role: "",
+          role: "farmer",
           status: "alive",
           admin: admin
         };
@@ -197,53 +197,101 @@ class App extends Component {
   // Both admin and normal players will call this
   startGame = roles => {
     // If admin, then assign role
-    // if(this.state.player.admin) {
-    //   this.assignRoles(roles);
-    // }
+    if (this.state.player.admin) {
+      this.assignRoles(roles);
+    }
     // If normal player, wait/get role
   };
 
   assignRoles = roles => {
-    // console.log("Assigning roles...");
-    // let farmers = this.state.playerList;
-    // let chosen = [];
-    // console.log("Amount of Mafias this game: " + roles.mafia);
-    // console.log("Doctor: " + roles.doctor);
-    // console.log("Sheriff: " + roles.sheriff);
-    // // Assign Maffia
-    // console.log("Time to assign Mafias ");
-    // for (i = 0; i < numMafia; i++) {
-    //     chosen = Math.floor(Math.random() * (farmers.length));
-    //     console.log("I just chose " + farmers[chosen]);
-    //     console.log( farmers[chosen] + " was assigned to be a Mafia");
-    //     mafia.push(farmers[chosen]);
-    //     farmers.splice(chosen, 1);
-    // }
-    // console.log("These are the Mafias");
-    // console.log(mafia);
-    // // Assign Doctor
-    // if (doctor) {
-    //     console.log("Time to assign Doctor");
-    //     chosen = Math.floor(Math.random() * (farmers.length));
-    //     doctorName = farmers[chosen];
-    //     farmers.splice(chosen, 1);
-    //     console.log("Doctor: " + doctorName);
-    //     }
-    //     else {
-    //         console.log("Not assigning Doctor this game.");
-    //     }
-    // // Assign Sheriff
-    // if (sheriff) {
-    //     chosen = Math.floor(Math.random() * (farmers.length));
-    //     console.log("Time to assign Sheriff");
-    //     sheriffName = farmers[chosen];
-    //     console.log("Just assigned " + farmers[chosen] + " as the Sheriff.");
-    //     farmers.splice(chosen, 1);
-    //     console.log("Sheriff: " + sheriff);
-    // }
-    // else {
-    //     console.log("Not assigning Sheriff this game.");
-    // }
+    console.log("Assigning roles...");
+
+    let farmers = this.state.playerList.slice();
+    let chosen = [];
+    let mafias = [];
+
+    console.log("Amount of Mafias this game: " + roles.mafia);
+    console.log("Doctor: " + roles.doctor);
+    console.log("Sheriff: " + roles.sheriff);
+
+    // Assign Maffia
+    console.log("Time to assign Mafias ");
+
+    for (let i = 0; i < roles.mafia; i++) {
+      chosen = Math.floor(Math.random() * farmers.length);
+
+      console.log("I just chose " + farmers[chosen].name);
+      console.log(farmers[chosen].name + " was assigned to be a Mafia");
+
+      mafias.push(farmers[chosen]);
+      farmers.splice(chosen, 1);
+    }
+
+    console.log("These are the Mafias");
+    console.log(mafias);
+
+    // Update state playerList with mafia roles
+    let newPlayerList = this.state.playerList.slice();
+    console.log(newPlayerList);
+
+    mafias.map(mafia => {
+      console.log(mafia);
+      const mafiaIndex = newPlayerList.indexOf(mafia);
+
+      console.log(mafia.name, "was found at index", mafiaIndex);
+
+      Object.assign(newPlayerList[mafiaIndex], { role: "mafia" });
+    });
+
+    this.setState({ playerList: newPlayerList });
+
+    // Assign Doctor
+    if (roles.doctor) {
+      console.log("Time to assign Doctor");
+
+      chosen = Math.floor(Math.random() * farmers.length);
+      let doctor = farmers[chosen];
+      farmers.splice(chosen, 1);
+
+      console.log("Doctor: " + doctor.name);
+
+      // Update state playerList with doctor role
+      this.setState(prevState => ({
+        playerList: prevState.playerList.map(player => {
+          return player === doctor
+            ? Object.assign(player, { role: "doctor" })
+            : player;
+        })
+      }));
+    } else {
+      console.log("Not assigning Doctor this game.");
+    }
+
+    // Assign Sheriff
+    if (roles.sheriff) {
+      chosen = Math.floor(Math.random() * farmers.length);
+
+      console.log("Time to assign Sheriff");
+
+      let sheriff = farmers[chosen];
+
+      console.log("Just assigned " + farmers[chosen].name + " as the Sheriff.");
+
+      farmers.splice(chosen, 1);
+
+      console.log("Sheriff: " + sheriff.name);
+
+      // Update state playerList with doctor role
+      this.setState(prevState => ({
+        playerList: prevState.playerList.map(player => {
+          return player === sheriff
+            ? Object.assign(player, { role: "sheriff" })
+            : player;
+        })
+      }));
+    } else {
+      console.log("Not assigning Sheriff this game.");
+    }
   };
 
   THEME = createMuiTheme({
