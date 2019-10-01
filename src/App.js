@@ -38,16 +38,41 @@ closed - Game over!
 class App extends Component {
   state = {
     page: "StartPage",
-    player: { name: "", role: "", status: "", admin: false },
+    player: { name: "", role: "", status: "", admin: false, seenRole: false },
     playerList: [
-      { name: "MATT", role: "farmer", status: "alive", admin: false },
-      { name: "BAJS", role: "farmer", status: "alive", admin: false },
-      { name: "KEBAB", role: "farmer", status: "alive", admin: false },
-      { name: "Lol", role: "farmer", status: "alive", admin: false }
+      {
+        name: "MATT",
+        role: "farmer",
+        status: "alive",
+        admin: false,
+        seenRole: false
+      },
+      {
+        name: "BAJS",
+        role: "farmer",
+        status: "alive",
+        admin: false,
+        seenRole: false
+      },
+      {
+        name: "KEBAB",
+        role: "farmer",
+        status: "alive",
+        admin: false,
+        seenRole: false
+      },
+      {
+        name: "Lol",
+        role: "farmer",
+        status: "alive",
+        admin: false,
+        seenRole: false
+      }
     ],
     game: {
       id: 0,
-      code: ""
+      code: "",
+      status: ""
     },
     gameList: [
       { id: 1, code: "ABCD", status: "open" },
@@ -71,6 +96,11 @@ class App extends Component {
     this.setState({ page: page });
   };
 
+  changeGameStatus = status => {
+    // We don't need to update gameList, only our game
+    this.setState({ game: Object.assign(this.state.game, { status: status }) });
+  };
+
   isAlive = player => {
     return player.status === "alive";
   };
@@ -85,6 +115,22 @@ class App extends Component {
 
   sheriffCheck = player => {
     this.setState({ sheriffChose: player.name });
+  };
+
+  // When player press ok after they've seen their role
+  seenRole = () => {
+    let newPlayerList = this.state.playerList.map(player => {
+      return player === this.state.player
+        ? Object.assign(player, { seenRole: true })
+        : player;
+    });
+    this.setState({
+      playerList: newPlayerList,
+      player: Object.assign(this.state.player, { seenRole: true })
+    });
+
+    // Move on to wait
+    this.wait();
   };
 
   // When Create Game button is pressed
@@ -130,7 +176,8 @@ class App extends Component {
           name: name,
           role: "farmer",
           status: "alive",
-          admin: admin
+          admin: admin,
+          seenRole: false
         };
 
         this.setState(prevState => {
@@ -216,11 +263,16 @@ class App extends Component {
   startGame = roles => {
     // If admin, then assign role
     if (this.state.player.admin) {
+      this.changeGameStatus("started");
       this.assignRoles(roles);
     }
-    // If normal player, wait/get role
+    // If normal player, wait for roles to be assigned
+    this.wait();
+  };
+
+  showRole = () => {
     this.updateMyPlayer();
-    this.setState({ page: "ShowRole" });
+    this.changePage("ShowRole");
   };
 
   assignRoles = roles => {
@@ -280,6 +332,12 @@ class App extends Component {
         })
       }));
     }
+
+    // Update game status
+    this.changeGameStatus("assigned");
+
+    // Move on to see role
+    this.showRole();
   };
 
   // Updates the current player with data from playerList
@@ -293,6 +351,10 @@ class App extends Component {
   // Load/Wait screen
   wait = () => {
     this.changePage("WaitPage");
+  };
+
+  night = () => {
+    this.changePage("NightMode");
   };
 
   THEME = createMuiTheme({
@@ -322,18 +384,14 @@ class App extends Component {
           <GameLobby
             changePage={this.changePage}
             players={this.state.playerList.filter(this.isAlive)}
-            game={this.state.game}
+            game={Object.assign({}, this.state.game)}
+            startGame={this.startGame}
           />
         );
 
       case "AdminPanel":
         return (
           <React.Fragment>
-            <GameLobby
-              changePage={this.changePage}
-              players={this.state.playerList.filter(this.isAlive)}
-              game={this.state.game}
-            />
             <AdminPanel
               startGame={this.startGame}
               players={this.state.playerList}
@@ -342,10 +400,10 @@ class App extends Component {
         );
 
       case "ShowRole":
-        return <ShowRole player={this.state.player} next={this.wait} />;
+        return <ShowRole player={this.state.player} next={this.seenRole} />;
 
       case "NightMode":
-        return <NightMode />;
+        return <NightMode admin={this.state.player.admin} />;
 
       case "NormalMafia":
         return <NormalMafia mafiaBoss="Marvin" />;
@@ -405,7 +463,16 @@ class App extends Component {
         );
 
       case "WaitPage":
-        return <WaitPage />;
+        return (
+          <WaitPage
+            status={this.state.game.status}
+            players={this.state.playerList}
+            player={this.state.player}
+            showRole={this.showRole}
+            changeStatus={this.changeGameStatus}
+            night={this.night}
+          />
+        );
 
       default:
         return (

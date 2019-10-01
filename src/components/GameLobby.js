@@ -5,6 +5,12 @@ import Typography from "@material-ui/core/Typography";
 class GameLobby extends Component {
   state = {};
 
+  componentDidUpdate() {
+    if (this.props.game.status !== "open") {
+      this.props.startGame();
+    }
+  }
+
   render() {
     return (
       <Grid

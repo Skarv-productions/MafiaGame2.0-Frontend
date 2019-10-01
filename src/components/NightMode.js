@@ -21,7 +21,7 @@ class NightMode extends Component {
           <Typography variant="h3">Go to sleep</Typography>
         </Grid>
 
-        <ReactPlayer url={SleepCity} playing={true} />
+        <ReactPlayer url={SleepCity} playing={this.props.admin} />
       </Grid>
     );
   }
