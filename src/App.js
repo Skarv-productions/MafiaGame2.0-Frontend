@@ -31,7 +31,7 @@ day - Daytime! Report and vote
 closed - Game over!
 
 Test
-
+test2 
 
 */
 
