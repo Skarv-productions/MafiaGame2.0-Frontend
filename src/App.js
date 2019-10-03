@@ -5,7 +5,7 @@ import AdminPanel from "./components/AdminPanel";
 import ShowRole from "./components/ShowRole";
 import NightMode from "./components/NightMode";
 import NormalMafia from "./components/NormalMafia";
-import MafiaBoss from "./components/MafiaBoss";
+import MafiaNight from "./components/MafiaNight";
 import MafiaKilled from "./components/MafiaKilled";
 import DoctorNight from "./components/DoctorNight";
 import DoctorSaved from "./components/DoctorSaved";
@@ -45,28 +45,28 @@ class App extends Component {
         role: "farmer",
         status: "alive",
         admin: false,
-        seenRole: false
+        seenRole: true
       },
       {
         name: "BAJS",
         role: "farmer",
         status: "alive",
         admin: false,
-        seenRole: false
+        seenRole: true
       },
       {
         name: "KEBAB",
         role: "farmer",
         status: "alive",
         admin: false,
-        seenRole: false
+        seenRole: true
       },
       {
         name: "Lol",
         role: "farmer",
         status: "alive",
         admin: false,
-        seenRole: false
+        seenRole: true
       }
     ],
     game: {
@@ -111,10 +111,12 @@ class App extends Component {
 
   doctorMark = player => {
     this.setState({ doctorChose: player.name });
+    this.changePage("DoctorSaved");
   };
 
   sheriffCheck = player => {
     this.setState({ sheriffChose: player.name });
+    this.changePage("SheriffChecked");
   };
 
   // When player press ok after they've seen their role
@@ -265,9 +267,10 @@ class App extends Component {
     if (this.state.player.admin) {
       this.changeGameStatus("started");
       this.assignRoles(roles);
+    } else {
+      // If normal player, wait for roles to be assigned
+      this.wait();
     }
-    // If normal player, wait for roles to be assigned
-    this.wait();
   };
 
   showRole = () => {
@@ -357,15 +360,7 @@ class App extends Component {
     this.changePage("NightMode");
   };
 
-  THEME = createMuiTheme({
-    typography: {
-      fontFamily: '"Mansalva", "Helvetica", "Arial", sans-serif',
-      fontSize: 20,
-      fontWeightLight: 300,
-      fontWeightRegular: 400,
-      fontWeightMedium: 500
-    }
-  });
+  wakeMafia = () => {};
 
   render() {
     switch (this.state.page) {
@@ -376,6 +371,7 @@ class App extends Component {
             nameError={this.state.nameError}
             codeError={this.state.codeError}
             joinGame={this.joinGame}
+            player={this.state.player}
           />
         );
 
@@ -403,14 +399,23 @@ class App extends Component {
         return <ShowRole player={this.state.player} next={this.seenRole} />;
 
       case "NightMode":
-        return <NightMode admin={this.state.player.admin} />;
+        return (
+          <NightMode
+            admin={this.state.player.admin}
+            changeStatus={this.changeGameStatus}
+            game={this.state.game}
+            changePage={this.changePage}
+            player={this.state.player}
+            players={this.state.playerList.filter(this.isAlive)}
+          />
+        );
 
       case "NormalMafia":
         return <NormalMafia mafiaBoss="Marvin" />;
 
-      case "MafiaBoss":
+      case "MafiaNight":
         return (
-          <MafiaBoss
+          <MafiaNight
             players={this.state.playerList.filter(this.isAlive)}
             mafiaMark={this.mafiaMark}
           />
@@ -443,6 +448,8 @@ class App extends Component {
           <SheriffChecked
             sheriffChose={this.state.sheriffChose}
             players={this.state.playerList.filter(this.isAlive)}
+            changePage={this.changePage}
+            changeStatus={this.changeGameStatus}
           />
         );
 

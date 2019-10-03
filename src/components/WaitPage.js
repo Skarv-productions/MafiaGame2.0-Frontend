@@ -6,15 +6,13 @@ import Typography from "@material-ui/core/Typography";
 class WaitPage extends Component {
   state = {};
 
+  componentDidMount() {
+    this.maybeStartNight();
+  }
+
   componentDidUpdate(prevProps) {
     // If admin and status is "assigned" and people have seen their role
-    if (
-      this.props.status === "assigned" &&
-      this.props.player.admin &&
-      this.checkSeenRole()
-    ) {
-      this.props.changeStatus("night");
-    }
+    this.maybeStartNight();
 
     // If status has changed
     if (prevProps.status !== this.props.status) {
@@ -29,6 +27,16 @@ class WaitPage extends Component {
       }
     }
   }
+
+  maybeStartNight = () => {
+    if (
+      this.props.status === "assigned" &&
+      this.props.player.admin &&
+      this.checkSeenRole()
+    ) {
+      this.props.changeStatus("night");
+    }
+  };
 
   checkSeenRole = () => {
     return this.props.players.find(player => {
