@@ -15,6 +15,7 @@ import NightReport from "./components/NightReport";
 import AdminVote from "./components/AdminVote";
 import RandomString from "random-string";
 import WaitPage from "./components/WaitPage";
+import axios from "axios"
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import "./App.css";
 
@@ -107,6 +108,17 @@ class App extends Component {
     sheriffChose: "",
     nameError: { active: false, text: "" },
     codeError: { active: false, text: "" }
+  };
+
+  componentDidMount() {
+    axios({
+      method: 'get',
+      url: 'https://3x2af729ag.execute-api.us-east-2.amazonaws.com/test/gamelist'
+    })
+      .then(response =>(
+        console.log(response)
+      ))
+      .catch(err => console.log(err))
   };
 
   changePage = page => {
