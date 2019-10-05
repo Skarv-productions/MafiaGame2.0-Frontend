@@ -2,9 +2,16 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
 
 class MafiaNight extends Component {
   state = {};
+
+  componentDidUpdate() {
+    if (this.props.game.status === "mafiaDone") {
+      this.props.changePage("NightMode");
+    }
+  }
 
   render() {
     return (
@@ -29,16 +36,26 @@ class MafiaNight extends Component {
         >
           {this.props.players.map(player => (
             <Grid item>
-              <Button
-                variant="contained"
-                size="large"
-                color="secondary"
-                onClick={() => {
-                  this.props.mafiaMark(player);
-                }}
+              <Tooltip
+                placement="top"
+                title={player.killVotes}
+                open={player.killVotes > 0}
               >
-                {player.name}
-              </Button>
+                <Button
+                  variant="contained"
+                  size="large"
+                  color={
+                    player.name === this.props.player.wantsToKill
+                      ? "primary"
+                      : "secondary"
+                  }
+                  onClick={() => {
+                    this.props.wantsToKill(player);
+                  }}
+                >
+                  {player.name}
+                </Button>
+              </Tooltip>
             </Grid>
           ))}
         </Grid>

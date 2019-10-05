@@ -35,12 +35,13 @@ class WaitPage extends Component {
       this.checkSeenRole()
     ) {
       this.props.changeStatus("night");
+      this.props.resetSeenInfo();
     }
   };
 
   checkSeenRole = () => {
     return this.props.players.find(player => {
-      return !player.seenRole;
+      return !player.seenInfo;
     })
       ? false
       : true;

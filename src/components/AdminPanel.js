@@ -56,12 +56,6 @@ class AdminPanel extends Component {
     return menuItems;
   };
 
-  getTooltip = () => {
-    if (this.state.locked) {
-      return "open=false";
-    }
-  };
-
   render() {
     return (
       <Grid

@@ -25,6 +25,7 @@ started - Game has started and you can't join, role should be assigned
 assigned - Roles have been assigned
 night - It's time to go to sleep
 mafia - Time for mafia to kill
+mafiaDone - Mafia have picked a person, display who they picked
 doctor - Time for doctor to heal
 sheriff - Sheriff is investigating
 day - Daytime! Report and vote
@@ -38,35 +39,51 @@ test2
 class App extends Component {
   state = {
     page: "StartPage",
-    player: { name: "", role: "", status: "", admin: false, seenRole: false },
+    player: {
+      name: "",
+      role: "",
+      status: "",
+      admin: false,
+      seenInfo: false,
+      wantsToKill: "",
+      killVotes: 0
+    },
     playerList: [
       {
         name: "MATT",
         role: "farmer",
         status: "alive",
         admin: false,
-        seenRole: true
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
       },
       {
         name: "BAJS",
         role: "farmer",
         status: "alive",
         admin: false,
-        seenRole: true
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
       },
       {
         name: "KEBAB",
         role: "farmer",
         status: "alive",
         admin: false,
-        seenRole: true
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
       },
       {
         name: "Lol",
         role: "farmer",
         status: "alive",
         admin: false,
-        seenRole: true
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
       }
     ],
     game: {
@@ -105,6 +122,87 @@ class App extends Component {
     return player.status === "alive";
   };
 
+  wantsToKill = player => {
+    // Check if we have already wanted to kill someone
+    if (this.state.player.wantsToKill !== "") {
+      // Remove the killVote
+      this.setState({
+        playerList: this.state.playerList.map(p => {
+          return p.name === this.state.player.wantsToKill
+            ? Object.assign(p, { killVotes: p.killVotes - 1 })
+            : p;
+        })
+      });
+    }
+
+    // Update current player
+    let me = {};
+    Object.assign(me, this.state.player);
+    Object.assign(me, { wantsToKill: player.name });
+    this.setState({ player: me });
+
+    // Update playerList
+    let newPlayerList = this.state.playerList.map(p => {
+      return p.name === this.state.player.name
+        ? Object.assign(p, { wantsToKill: player.name })
+        : p;
+    });
+    newPlayerList = newPlayerList.map(p => {
+      return p.name === player.name
+        ? Object.assign(p, { killVotes: p.killVotes + 1 })
+        : p;
+    });
+    this.setState({ playerList: newPlayerList });
+
+    // Check if all living mafias has voted
+    const numMafia = this.state.playerList.filter(this.isAlive).filter(p => {
+      return p.role === "mafia";
+    }).length;
+
+    console.log("There are", numMafia, "alive.");
+
+    const hasVoted = this.state.playerList.filter(p => {
+      return p.wantsToKill !== "";
+    }).length;
+
+    console.log(hasVoted, "of them has voted.");
+
+    if (numMafia === hasVoted) {
+      console.log("All mafias has voted");
+
+      // Get max value
+      const maxVote = Math.max(
+        ...this.state.playerList.map(p => {
+          return p.killVotes;
+        })
+      );
+      // Save player with most killVotes
+      const toBeKilled = this.state.playerList.find(p => {
+        return p.killVotes === maxVote;
+      });
+
+      // See if that max value exists more than once
+      if (
+        this.state.playerList.filter(p => {
+          return p.killVotes === maxVote;
+        }).length === 1
+      ) {
+        this.mafiaMark(toBeKilled);
+        this.changeGameStatus("mafiaDone");
+      } else {
+        console.log("The mafia needs to agree on one person");
+      }
+    } else {
+      console.log("Waiting for", numMafia - hasVoted, "more mafia to vote.");
+    }
+  };
+
+  resetKillVotes = () => {
+    let newPlayerList = this.state.playerList.map(p => {
+      return Object.assign(p, { killVotes: 0, wantsToKill: "" });
+    });
+  };
+
   mafiaMark = player => {
     this.setState({ mafiaChose: player.name });
   };
@@ -120,19 +218,27 @@ class App extends Component {
   };
 
   // When player press ok after they've seen their role
-  seenRole = () => {
+  seenInfo = () => {
     let newPlayerList = this.state.playerList.map(player => {
       return player === this.state.player
-        ? Object.assign(player, { seenRole: true })
+        ? Object.assign(player, { seenInfo: true })
         : player;
     });
     this.setState({
       playerList: newPlayerList,
-      player: Object.assign(this.state.player, { seenRole: true })
+      player: Object.assign(this.state.player, { seenInfo: true })
     });
 
     // Move on to wait
     this.wait();
+  };
+
+  resetSeenInfo = () => {
+    let newPlayerList = this.state.playerList.map(p => {
+      return Object.assign(p, { seenInfo: false });
+    });
+
+    this.setState({ playerList: newPlayerList });
   };
 
   // When Create Game button is pressed
@@ -179,7 +285,9 @@ class App extends Component {
           role: "farmer",
           status: "alive",
           admin: admin,
-          seenRole: false
+          seenInfo: false,
+          wantsToKill: "",
+          killVotes: 0
         };
 
         this.setState(prevState => {
@@ -362,6 +470,12 @@ class App extends Component {
 
   wakeMafia = () => {};
 
+  numMafia = () => {
+    this.state.playerList.filter(p => {
+      return p.role === "mafia";
+    }).length;
+  };
+
   render() {
     switch (this.state.page) {
       case "StartPage":
@@ -396,7 +510,7 @@ class App extends Component {
         );
 
       case "ShowRole":
-        return <ShowRole player={this.state.player} next={this.seenRole} />;
+        return <ShowRole player={this.state.player} next={this.seenInfo} />;
 
       case "NightMode":
         return (
@@ -417,12 +531,21 @@ class App extends Component {
         return (
           <MafiaNight
             players={this.state.playerList.filter(this.isAlive)}
-            mafiaMark={this.mafiaMark}
+            wantsToKill={this.wantsToKill}
+            player={this.state.player}
+            game={this.state.game}
+            changePage={this.changePage}
           />
         );
 
       case "MafiaKilled":
-        return <MafiaKilled mafiaChose={this.state.mafiaChose} />;
+        return (
+          <MafiaKilled
+            mafiaChose={this.state.mafiaChose}
+            players={this.state.playerList.filter(this.isAlive)}
+            seenInfo={this.seenInfo}
+          />
+        );
 
       case "DoctorNight":
         return (
@@ -478,6 +601,7 @@ class App extends Component {
             showRole={this.showRole}
             changeStatus={this.changeGameStatus}
             night={this.night}
+            resetSeenInfo={this.resetSeenInfo}
           />
         );
 
