@@ -7,22 +7,33 @@ class MafiaKilled extends Component {
   state = {};
 
   seenInfo = () => {
-    this.props.seenInfo();
+    this.props.seenInfo(this.ifLastMafia);
+  };
 
+  // SetState update is not being noticed. Probably needs to do a onComponantUpdate and see ifLastMafia()
+
+  ifLastMafia = () => {
+    console.log("ifLastMafia called!");
     // Check if you were the last mafia to see
-    const numMafia = this.props.players.filter(p => {
+    const numMafia = this.props.players.filter(this.props.isAlive).filter(p => {
       return p.role === "mafia";
     }).length;
 
-    console.log("There are", numMafia, "alive.");
+    console.log("There are", numMafia, " mafias alive.");
 
-    const hasVoted = this.state.playerList.filter(p => {
-      return p.wantsToKill !== "";
+    const hasSeen = this.props.players.filter(this.props.isAlive).filter(p => {
+      console.log("Cheking player", p.name, ". seenInfo:", p.seenInfo);
+      return p.seenInfo;
     }).length;
 
-    console.log(hasVoted, "of them has voted.");
+    console.log(hasSeen, "of them has voted.");
 
-    if (numMafia === hasVoted) {
+    if (numMafia === hasSeen) {
+      console.log("Changing game status to doctor!");
+      this.props.changeGameStatus("doctor");
+    }
+
+    this.props.changePage("NightMode");
   };
 
   render() {

@@ -15,7 +15,7 @@ import NightReport from "./components/NightReport";
 import AdminVote from "./components/AdminVote";
 import RandomString from "random-string";
 import WaitPage from "./components/WaitPage";
-import axios from "axios"
+import axios from "axios";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import "./App.css";
 
@@ -43,7 +43,7 @@ class App extends Component {
     player: {
       name: "",
       role: "",
-      status: "",
+      alive: true,
       admin: false,
       seenInfo: false,
       wantsToKill: "",
@@ -53,7 +53,7 @@ class App extends Component {
       {
         name: "MATT",
         role: "farmer",
-        status: "alive",
+        alive: true,
         admin: false,
         seenInfo: true,
         wantsToKill: "",
@@ -62,7 +62,7 @@ class App extends Component {
       {
         name: "BAJS",
         role: "farmer",
-        status: "alive",
+        alive: true,
         admin: false,
         seenInfo: true,
         wantsToKill: "",
@@ -71,7 +71,7 @@ class App extends Component {
       {
         name: "KEBAB",
         role: "farmer",
-        status: "alive",
+        alive: true,
         admin: false,
         seenInfo: true,
         wantsToKill: "",
@@ -80,7 +80,7 @@ class App extends Component {
       {
         name: "Lol",
         role: "farmer",
-        status: "alive",
+        alive: true,
         admin: false,
         seenInfo: true,
         wantsToKill: "",
@@ -112,14 +112,13 @@ class App extends Component {
 
   componentDidMount() {
     axios({
-      method: 'get',
-      url: 'https://3x2af729ag.execute-api.us-east-2.amazonaws.com/test/gamelist'
+      method: "get",
+      url:
+        "https://3x2af729ag.execute-api.us-east-2.amazonaws.com/test/gamelist"
     })
-      .then(response =>(
-        console.log(response)
-      ))
-      .catch(err => console.log(err))
-  };
+      .then(response => console.log(response))
+      .catch(err => console.log(err));
+  }
 
   changePage = page => {
     this.setState({ page: page });
@@ -131,11 +130,11 @@ class App extends Component {
   };
 
   isAlive = player => {
-    return player.status === "alive";
+    return player.alive;
   };
 
   wantsToKill = player => {
-    // Check if we have already wanted to kill someone
+    // Check if we already wants to kill someone
     if (this.state.player.wantsToKill !== "") {
       // Remove the killVote
       this.setState({
@@ -167,9 +166,7 @@ class App extends Component {
     this.setState({ playerList: newPlayerList });
 
     // Check if all living mafias has voted
-    const numMafia = this.state.playerList.filter(this.isAlive).filter(p => {
-      return p.role === "mafia";
-    }).length;
+    const numMafia = this.numMafia();
 
     console.log("There are", numMafia, "alive.");
 
@@ -229,20 +226,29 @@ class App extends Component {
     this.changePage("SheriffChecked");
   };
 
-  // When player press ok after they've seen their role
-  seenInfo = () => {
+  // When player press ok after they've seen specific info
+  seenInfo = callback => {
+    console.log("Seen info called!");
+
     let newPlayerList = this.state.playerList.map(player => {
       return player === this.state.player
         ? Object.assign(player, { seenInfo: true })
         : player;
     });
-    this.setState({
-      playerList: newPlayerList,
-      player: Object.assign(this.state.player, { seenInfo: true })
-    });
-
-    // Move on to wait
-    this.wait();
+    this.setState(
+      {
+        playerList: newPlayerList,
+        player: Object.assign(this.state.player, { seenInfo: true })
+      },
+      () => {
+        // If callback, then execute
+        if (callback) {
+          console.log("Callback found!");
+          callback();
+          console.log("Callback done!");
+        }
+      }
+    );
   };
 
   resetSeenInfo = () => {
@@ -295,7 +301,7 @@ class App extends Component {
         const newPlayer = {
           name: name,
           role: "farmer",
-          status: "alive",
+          alive: true,
           admin: admin,
           seenInfo: false,
           wantsToKill: "",
@@ -373,9 +379,7 @@ class App extends Component {
   kill = name => {
     this.setState(prevState => ({
       playerList: prevState.playerList.map(player =>
-        player.name === name
-          ? Object.assign(player, { status: "dead" })
-          : player
+        player.name === name ? Object.assign(player, { alive: false }) : player
       )
     }));
     console.log("You voted to kill", name);
@@ -483,8 +487,8 @@ class App extends Component {
   wakeMafia = () => {};
 
   numMafia = () => {
-    this.state.playerList.filter(p => {
-      return p.role === "mafia";
+    return this.state.playerList.filter(p => {
+      return p.role === "mafia" && p.alive;
     }).length;
   };
 
@@ -522,7 +526,13 @@ class App extends Component {
         );
 
       case "ShowRole":
-        return <ShowRole player={this.state.player} next={this.seenInfo} />;
+        return (
+          <ShowRole
+            player={this.state.player}
+            next={this.seenInfo}
+            wait={this.wait}
+          />
+        );
 
       case "NightMode":
         return (
@@ -554,8 +564,11 @@ class App extends Component {
         return (
           <MafiaKilled
             mafiaChose={this.state.mafiaChose}
-            players={this.state.playerList.filter(this.isAlive)}
+            players={this.state.playerList}
+            isAlive={this.isAlive}
             seenInfo={this.seenInfo}
+            changeGameStatus={this.changeGameStatus}
+            changePage={this.changePage}
           />
         );
 

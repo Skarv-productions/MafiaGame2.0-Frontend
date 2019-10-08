@@ -34,7 +34,9 @@ class ShowRole extends Component {
             variant="contained"
             size="large"
             color="primary"
-            onClick={this.props.next}
+            onClick={() => {
+              this.props.next(this.props.wait);
+            }}
           >
             OK
           </Button>

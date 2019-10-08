@@ -9,7 +9,7 @@ class MafiaNight extends Component {
 
   componentDidUpdate() {
     if (this.props.game.status === "mafiaDone") {
-      this.props.changePage("NightMode");
+      this.props.changePage("MafiaKilled");
     }
   }
 
