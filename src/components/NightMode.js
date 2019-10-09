@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import WakeCity from "../audio/WakeCity.mp3";
 import SleepCity from "../audio/SleepCity.mp3";
 import WakeMafia from "../audio/WakeMafia.mp3";
 import SleepMafia from "../audio/SleepMafia.mp3";
@@ -14,6 +15,7 @@ class NightMode extends Component {
     activeSound: SleepCity
   };
 
+  audio_wakeCity = new Audio(WakeCity);
   audio_sleepCity = new Audio(SleepCity);
   audio_wakeMafia = new Audio(WakeMafia);
   audio_sleepMafia = new Audio(SleepMafia);
@@ -86,6 +88,10 @@ class NightMode extends Component {
               this.audio_wakeDoctor.play();
             }, 5000);
           }
+          // If doctor is not alive
+          else {
+            this.props.changeStatus("sheriff");
+          }
         }
         if (this.props.player.role === "doctor") {
           setTimeout(() => {
@@ -103,6 +109,8 @@ class NightMode extends Component {
             setTimeout(() => {
               this.audio_wakeSheriff.play();
             }, 5000);
+          } else {
+            this.props.changeStatus("day");
           }
         }
         if (this.props.player.role === "sheriff") {
@@ -110,6 +118,20 @@ class NightMode extends Component {
             this.props.changePage("SheriffNight");
           }, 5000);
         }
+        break;
+
+      case "day":
+        if (this.props.admin) {
+          if (this.sheriffAlive()) {
+            this.audio_sleepSheriff.play();
+          }
+          setTimeout(() => {
+            this.audio_wakeCity.play();
+          }, 5000);
+        }
+        setTimeout(() => {
+          this.props.changePage("NightReport");
+        }, 5000);
         break;
     }
   };

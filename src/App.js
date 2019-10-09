@@ -607,6 +607,8 @@ class App extends Component {
           <NightReport
             mafiaChose={this.state.mafiaChose}
             doctorChose={this.state.doctorChose}
+            admin={this.state.player.admin}
+            changePage={this.changePage}
           />
         );
 

@@ -1,9 +1,18 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
 class NightReport extends Component {
   state = {};
+
+  next = () => {
+    if (this.props.admin) {
+      this.props.changePage("AdminVote");
+    } else {
+      this.props.changePage("GameLobby");
+    }
+  };
 
   render() {
     const mafiaChose = this.props.mafiaChose;
@@ -22,6 +31,17 @@ class NightReport extends Component {
             {mafiaChose} was {mafiaChose === doctorChose ? "saved" : "killed"}{" "}
             during the night
           </Typography>
+        </Grid>
+
+        <Grid item>
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={this.next}
+          >
+            OK
+          </Button>
         </Grid>
       </Grid>
     );
