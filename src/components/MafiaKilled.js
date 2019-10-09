@@ -6,6 +6,13 @@ import Button from "@material-ui/core/Button";
 class MafiaKilled extends Component {
   state = {};
 
+  componentDidUpdate() {
+    // If we have seenInfo
+    if (this.props.player.seenInfo) {
+      this.ifLastMafia();
+    }
+  }
+
   seenInfo = () => {
     this.props.seenInfo(this.ifLastMafia);
   };

@@ -231,7 +231,7 @@ class App extends Component {
     console.log("Seen info called!");
 
     let newPlayerList = this.state.playerList.map(player => {
-      return player === this.state.player
+      return player.name === this.state.player.name
         ? Object.assign(player, { seenInfo: true })
         : player;
     });
@@ -569,6 +569,7 @@ class App extends Component {
             seenInfo={this.seenInfo}
             changeGameStatus={this.changeGameStatus}
             changePage={this.changePage}
+            player={this.state.player}
           />
         );
 
