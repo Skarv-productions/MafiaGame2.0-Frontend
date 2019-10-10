@@ -377,12 +377,17 @@ class App extends Component {
   };
 
   kill = name => {
-    this.setState(prevState => ({
-      playerList: prevState.playerList.map(player =>
-        player.name === name ? Object.assign(player, { alive: false }) : player
-      )
-    }));
     console.log("You voted to kill", name);
+
+    if (name !== "none") {
+      this.setState(prevState => ({
+        playerList: prevState.playerList.map(player =>
+          player.name === name
+            ? Object.assign(player, { alive: false })
+            : player
+        )
+      }));
+    }
   };
 
   // Both admin and normal players will call this
@@ -582,7 +587,13 @@ class App extends Component {
         );
 
       case "DoctorSaved":
-        return <DoctorSaved doctorChose={this.state.doctorChose} />;
+        return (
+          <DoctorSaved
+            doctorChose={this.state.doctorChose}
+            changePage={this.changePage}
+            changeStatus={this.changeGameStatus}
+          />
+        );
 
       case "SheriffNight":
         return (
