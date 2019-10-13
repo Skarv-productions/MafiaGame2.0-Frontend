@@ -12,7 +12,7 @@ import DoctorSaved from "./components/DoctorSaved";
 import SheriffNight from "./components/SheriffNight";
 import SheriffChecked from "./components/SheriffChecked";
 import NightReport from "./components/NightReport";
-import AdminVote from "./components/AdminVote";
+import DayVote from "./components/DayVote";
 import RandomString from "random-string";
 import WaitPage from "./components/WaitPage";
 import GameOver from "./components/GameOver";
@@ -147,6 +147,17 @@ class App extends Component {
       });
     }
 
+    // If the player we pressed is already pressed, then toggle off.
+    if (this.state.player.wantsToKill === player) {
+      this.setState({
+        playerList: this.state.playerList.map(p => {
+          return p.name === this.state.player.name
+            ? Object.assign(p, { wantsToKill: "" })
+            : p;
+        })
+        // Update our player here
+      });
+    }
     // Update current player
     let me = {};
     Object.assign(me, this.state.player);
@@ -211,6 +222,10 @@ class App extends Component {
     let newPlayerList = this.state.playerList.map(p => {
       return Object.assign(p, { killVotes: 0, wantsToKill: "" });
     });
+  };
+
+  resetChoices = () => {
+    this.setState({ mafiaChose: "", doctorChose: "", sheriffChose: "" });
   };
 
   mafiaMark = player => {
@@ -539,6 +554,9 @@ class App extends Component {
     if (this.state.mafiaChose !== this.state.doctorChose) {
       this.kill(this.state.mafiaChose);
     }
+
+    // Since this is a mafia kill, we can now reset kill votes
+    this.resetKillVotes();
   };
 
   render() {
@@ -671,9 +689,9 @@ class App extends Component {
           />
         );
 
-      case "AdminVote":
+      case "DayVote":
         return (
-          <AdminVote
+          <DayVote
             players={this.state.playerList.filter(this.isAlive)}
             onKill={this.kill}
           />
