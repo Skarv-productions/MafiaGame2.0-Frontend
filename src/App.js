@@ -15,6 +15,7 @@ import NightReport from "./components/NightReport";
 import AdminVote from "./components/AdminVote";
 import RandomString from "random-string";
 import WaitPage from "./components/WaitPage";
+import GameOver from "./components/GameOver";
 import axios from "axios";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import "./App.css";
@@ -497,6 +498,49 @@ class App extends Component {
     }).length;
   };
 
+  numGood = () => {
+    return this.state.playerList.filter(p => {
+      return p.role !== "mafia" && p.alive;
+    }).length;
+  };
+
+  didIDie = () => {
+    let alive = true;
+
+    this.state.playerList.map(p => {
+      if (p.name === this.state.player.name && !p.alive) {
+        alive = false;
+      }
+    });
+
+    return alive;
+  };
+
+  didSomeoneWin = () => {
+    let whoWon = false;
+    let numMafia = this.numMafia();
+    let numGood = this.numGood();
+
+    // If all mafias are dead
+    if (!numMafia) {
+      whoWon = "city";
+    }
+
+    // If there are same number of mafias as good players
+    else if (numMafia === numGood) {
+      whoWon = "mafia";
+    }
+
+    return whoWon;
+  };
+
+  nightKill = () => {
+    // If someone should be killed during night, then kill them
+    if (this.state.mafiaChose !== this.state.doctorChose) {
+      this.kill(this.state.mafiaChose);
+    }
+  };
+
   render() {
     switch (this.state.page) {
       case "StartPage":
@@ -548,6 +592,7 @@ class App extends Component {
             changePage={this.changePage}
             player={this.state.player}
             players={this.state.playerList.filter(this.isAlive)}
+            nightKill={this.nightKill}
           />
         );
 
@@ -610,6 +655,7 @@ class App extends Component {
             players={this.state.playerList.filter(this.isAlive)}
             changePage={this.changePage}
             changeStatus={this.changeGameStatus}
+            nightKill={this.nightKill}
           />
         );
 
@@ -620,6 +666,8 @@ class App extends Component {
             doctorChose={this.state.doctorChose}
             admin={this.state.player.admin}
             changePage={this.changePage}
+            didIDie={this.didIDie}
+            didSomeoneWin={this.didSomeoneWin}
           />
         );
 
@@ -643,6 +691,9 @@ class App extends Component {
             resetSeenInfo={this.resetSeenInfo}
           />
         );
+
+      case "GameOver":
+        return <GameOver whoWon={this.didSomeoneWin()} />;
 
       default:
         return (

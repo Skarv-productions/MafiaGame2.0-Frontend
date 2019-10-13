@@ -7,6 +7,7 @@ class SheriffChecked extends Component {
   state = {};
 
   next = () => {
+    this.props.nightKill();
     this.props.changeStatus("day");
     this.props.changePage("NightMode");
   };

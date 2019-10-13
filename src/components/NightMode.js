@@ -110,6 +110,7 @@ class NightMode extends Component {
               this.audio_wakeSheriff.play();
             }, 5000);
           } else {
+            this.props.nightKill();
             this.props.changeStatus("day");
           }
         }

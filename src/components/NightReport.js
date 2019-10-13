@@ -7,16 +7,24 @@ class NightReport extends Component {
   state = {};
 
   next = () => {
-    if (this.props.admin) {
-      this.props.changePage("AdminVote");
-    } else {
-      this.props.changePage("GameLobby");
+    // If someone won or we died
+    if (this.props.didSomeoneWin() || this.props.didIDie()) {
+      this.props.changePage("GameOver");
+    }
+    // If game is still on and we survived
+    else {
+      if (this.props.admin) {
+        this.props.changePage("AdminVote");
+      } else {
+        this.props.changePage("GameLobby");
+      }
     }
   };
 
   render() {
     const mafiaChose = this.props.mafiaChose;
     const doctorChose = this.props.doctorChose;
+
     return (
       <Grid
         container
