@@ -7,35 +7,35 @@ class WaitPage extends Component {
   state = {};
 
   componentDidMount() {
-    this.maybeStartNight();
+    this.statusCheck();
   }
 
   componentDidUpdate(prevProps) {
-    // If admin and status is "assigned" and people have seen their role
-    this.maybeStartNight();
-
-    // If status has changed
-    if (prevProps.status !== this.props.status) {
-      switch (this.props.status) {
-        case "assigned":
-          this.props.showRole();
-          break;
-
-        case "night":
-          this.props.night();
-          break;
-      }
-    }
+    this.statusCheck();
   }
 
+  statusCheck = () => {
+    switch (this.props.status) {
+      case "assigned":
+        if (this.props.player.seenInfo) {
+          if (this.props.player.admin) {
+            this.maybeStartNight();
+          }
+        } else {
+          this.props.showRole();
+        }
+        break;
+
+      case "night":
+        this.props.resetSeenInfo();
+        this.props.night();
+        break;
+    }
+  };
+
   maybeStartNight = () => {
-    if (
-      this.props.status === "assigned" &&
-      this.props.player.admin &&
-      this.checkSeenRole()
-    ) {
+    if (this.checkSeenRole()) {
       this.props.changeStatus("night");
-      this.props.resetSeenInfo();
     }
   };
 

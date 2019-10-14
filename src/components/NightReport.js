@@ -13,11 +13,7 @@ class NightReport extends Component {
     }
     // If game is still on and we survived
     else {
-      if (this.props.admin) {
-        this.props.changePage("AdminVote");
-      } else {
-        this.props.changePage("GameLobby");
-      }
+      this.props.changePage("DayVote");
     }
   };
 

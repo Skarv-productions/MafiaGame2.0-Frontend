@@ -4,14 +4,8 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 
-class MafiaNight extends Component {
+class DayVote extends Component {
   state = {};
-
-  componentDidUpdate() {
-    if (this.props.game.status === "mafiaDone") {
-      this.props.changePage("MafiaKilled");
-    }
-  }
 
   render() {
     return (
@@ -24,7 +18,14 @@ class MafiaNight extends Component {
         style={{ minHeight: "98vh", textAlign: "center" }}
       >
         <Grid item>
-          <Typography variant="h3">Who do you want to kill?</Typography>
+          <Typography variant="h3">Who do you want to vote out?</Typography>
+        </Grid>
+
+        <Grid item>
+          <Typography variant="h5">
+            You need {Math.floor(this.props.players.length / 2) + 1} votes on
+            the same action in order to move on.
+          </Typography>
         </Grid>
 
         <Grid
@@ -47,10 +48,10 @@ class MafiaNight extends Component {
                   color={
                     player.name === this.props.player.wantsToKill
                       ? "primary"
-                      : "secondary"
+                      : "default"
                   }
                   onClick={() => {
-                    this.props.wantsToKill(player, this.props.doesMafiaAgree);
+                    this.props.wantsToKill(player, this.props.doesPlayersAgree);
                   }}
                 >
                   {player.name}
@@ -58,10 +59,35 @@ class MafiaNight extends Component {
               </Tooltip>
             </Grid>
           ))}
+          <Grid item>
+            <Tooltip
+              placement="top"
+              title={this.props.noneVotes}
+              open={this.props.noneVotes > 0}
+            >
+              <Button
+                variant="contained"
+                size="large"
+                color={
+                  "none" === this.props.player.wantsToKill
+                    ? "primary"
+                    : "default"
+                }
+                onClick={() => {
+                  this.props.wantsToKill(
+                    { name: "none" },
+                    this.props.doesPlayersAgree
+                  );
+                }}
+              >
+                None
+              </Button>
+            </Tooltip>
+          </Grid>
         </Grid>
       </Grid>
     );
   }
 }
 
-export default MafiaNight;
+export default DayVote;

@@ -12,6 +12,7 @@ import DoctorSaved from "./components/DoctorSaved";
 import SheriffNight from "./components/SheriffNight";
 import SheriffChecked from "./components/SheriffChecked";
 import NightReport from "./components/NightReport";
+import DayReport from "./components/DayReport";
 import DayVote from "./components/DayVote";
 import RandomString from "random-string";
 import WaitPage from "./components/WaitPage";
@@ -107,6 +108,8 @@ class App extends Component {
     mafiaChose: "",
     doctorChose: "",
     sheriffChose: "",
+    cityChose: "",
+    votesToKillNone: 0,
     nameError: { active: false, text: "" },
     codeError: { active: false, text: "" }
   };
@@ -134,63 +137,86 @@ class App extends Component {
     return player.alive;
   };
 
-  wantsToKill = player => {
+  wantsToKill = (player, callback) => {
     // Check if we already wants to kill someone
     if (this.state.player.wantsToKill !== "") {
-      // Remove the killVote
-      this.setState({
-        playerList: this.state.playerList.map(p => {
-          return p.name === this.state.player.wantsToKill
-            ? Object.assign(p, { killVotes: p.killVotes - 1 })
-            : p;
-        })
-      });
+      // Was that "none"?
+      if (this.state.player.wantsToKill === "none") {
+        // Remove one from votesToKillNone
+        this.setState({ votesToKillNone: this.state.votesToKillNone - 1 });
+      }
+      // Was it a normal player?
+      else {
+        // Remove the killVote
+        this.setState({
+          playerList: this.state.playerList.map(p => {
+            return p.name === this.state.player.wantsToKill
+              ? Object.assign(p, { killVotes: p.killVotes - 1 })
+              : p;
+          })
+        });
+      }
     }
 
     // If the player we pressed is already pressed, then toggle off.
-    if (this.state.player.wantsToKill === player) {
+    if (this.state.player.wantsToKill === player.name) {
+      console.log("We pressed on the same player as before.");
+
+      let newMe = Object.assign({}, this.state.player);
+      Object.assign(newMe, { wantsToKill: "" });
+
       this.setState({
         playerList: this.state.playerList.map(p => {
           return p.name === this.state.player.name
             ? Object.assign(p, { wantsToKill: "" })
             : p;
-        })
-        // Update our player here
+        }),
+        player: newMe
       });
+
+      console.log("Toggle should be off.");
     }
-    // Update current player
-    let me = {};
-    Object.assign(me, this.state.player);
-    Object.assign(me, { wantsToKill: player.name });
-    this.setState({ player: me });
+    // If we pressed on a new player
+    else {
+      // Update current player
+      let me = Object.assign({}, this.state.player);
+      Object.assign(me, { wantsToKill: player.name });
 
-    // Update playerList
-    let newPlayerList = this.state.playerList.map(p => {
-      return p.name === this.state.player.name
-        ? Object.assign(p, { wantsToKill: player.name })
-        : p;
-    });
-    newPlayerList = newPlayerList.map(p => {
-      return p.name === player.name
-        ? Object.assign(p, { killVotes: p.killVotes + 1 })
-        : p;
-    });
-    this.setState({ playerList: newPlayerList });
+      // Update playerList
+      let newPlayerList = this.state.playerList.map(p => {
+        return p.name === this.state.player.name
+          ? Object.assign(p, { wantsToKill: player.name })
+          : p;
+      });
+      if (player.name === "none") {
+        this.setState({ votesToKillNone: this.state.votesToKillNone + 1 });
+      } else {
+        newPlayerList = newPlayerList.map(p => {
+          return p.name === player.name
+            ? Object.assign(p, { killVotes: p.killVotes + 1 })
+            : p;
+        });
+      }
 
+      this.setState({ playerList: newPlayerList, player: me });
+
+      if (callback) {
+        callback();
+      }
+    }
+  };
+
+  hasVoted = p => {
+    return p.wantsToKill !== "";
+  };
+
+  doesMafiaAgree = () => {
     // Check if all living mafias has voted
     const numMafia = this.numMafia();
 
-    console.log("There are", numMafia, "alive.");
-
-    const hasVoted = this.state.playerList.filter(p => {
-      return p.wantsToKill !== "";
-    }).length;
-
-    console.log(hasVoted, "of them has voted.");
+    const hasVoted = this.state.playerList.filter(this.hasVoted).length;
 
     if (numMafia === hasVoted) {
-      console.log("All mafias has voted");
-
       // Get max value
       const maxVote = Math.max(
         ...this.state.playerList.map(p => {
@@ -218,14 +244,80 @@ class App extends Component {
     }
   };
 
+  doesPlayersAgree = () => {
+    // Is there majority on one player? (meaning >50%, roundDown(numPlayers/2)+1 )
+    // If so then kill player, reset some values?, start new night
+
+    // Declare some variables
+    const alivePlayers = this.state.playerList.filter(this.isAlive);
+    console.log("There are", alivePlayers.length, "players alive.");
+
+    // Majority is >50% of players
+    const numMajority = Math.floor(alivePlayers.length / 2) + 1;
+    console.log("We need", numMajority, "votes on the same thing to move on.");
+
+    const hasVoted = alivePlayers.filter(this.hasVoted).length;
+    console.log(hasVoted, "players has voted.");
+
+    // Se if there is a majority vote
+    let majorityAgree = false;
+    let majorityVote = "";
+    alivePlayers.map(p => {
+      if (p.killVotes >= numMajority) {
+        majorityAgree = true;
+        majorityVote = p.name;
+      }
+    });
+    if (this.state.votesToKillNone >= numMajority) {
+      majorityAgree = true;
+      majorityVote = "none";
+    }
+
+    if (majorityAgree) {
+      // Update cityChose, so we can display in DayReport
+      this.setState({ cityChose: majorityVote });
+
+      // Reset seen info values
+      this.resetSeenInfo();
+
+      // If a player was chosen then kill them
+      if (majorityVote !== "none") {
+        this.kill(majorityVote);
+      }
+
+      // Move on to DayReport
+      this.changePage("DayReport");
+    }
+  };
+
+  voteNone = () => {
+    // Ch
+    if (this.state.player.wantsToKill === "none") {
+    }
+  };
+
   resetKillVotes = () => {
+    let newMe = Object.assign({}, this.state.player);
+    Object.assign(newMe, { killVotes: 0, wantsToKill: "" });
+
     let newPlayerList = this.state.playerList.map(p => {
       return Object.assign(p, { killVotes: 0, wantsToKill: "" });
+    });
+
+    this.setState({
+      playerList: newPlayerList,
+      votesToKillNone: 0,
+      player: newMe
     });
   };
 
   resetChoices = () => {
-    this.setState({ mafiaChose: "", doctorChose: "", sheriffChose: "" });
+    this.setState({
+      mafiaChose: "",
+      doctorChose: "",
+      sheriffChose: "",
+      cityChose: ""
+    });
   };
 
   mafiaMark = player => {
@@ -268,11 +360,17 @@ class App extends Component {
   };
 
   resetSeenInfo = () => {
+    // Update current player
+    let newMe = Object.assign({}, this.state.player);
+    Object.assign(newMe, { seenInfo: false });
+
+    // Update playerList
     let newPlayerList = this.state.playerList.map(p => {
       return Object.assign(p, { seenInfo: false });
     });
 
-    this.setState({ playerList: newPlayerList });
+    // Update state
+    this.setState({ playerList: newPlayerList, player: newMe });
   };
 
   // When Create Game button is pressed
@@ -502,6 +600,10 @@ class App extends Component {
   };
 
   night = () => {
+    // Reset daily values before starting a night
+    this.resetChoices();
+    this.resetSeenInfo();
+
     this.changePage("NightMode");
   };
 
@@ -520,15 +622,15 @@ class App extends Component {
   };
 
   didIDie = () => {
-    let alive = true;
+    let dead = false;
 
     this.state.playerList.map(p => {
       if (p.name === this.state.player.name && !p.alive) {
-        alive = false;
+        dead = true;
       }
     });
 
-    return alive;
+    return dead;
   };
 
   didSomeoneWin = () => {
@@ -625,6 +727,7 @@ class App extends Component {
             player={this.state.player}
             game={this.state.game}
             changePage={this.changePage}
+            doesMafiaAgree={this.doesMafiaAgree}
           />
         );
 
@@ -638,6 +741,7 @@ class App extends Component {
             changeGameStatus={this.changeGameStatus}
             changePage={this.changePage}
             player={this.state.player}
+            resetSeenInfo={this.resetSeenInfo}
           />
         );
 
@@ -693,7 +797,26 @@ class App extends Component {
         return (
           <DayVote
             players={this.state.playerList.filter(this.isAlive)}
-            onKill={this.kill}
+            player={this.state.player}
+            wantsToKill={this.wantsToKill}
+            doesPlayersAgree={this.doesPlayersAgree}
+            noneVotes={this.state.votesToKillNone}
+            seenInfo={this.seenInfo}
+          />
+        );
+
+      case "DayReport":
+        return (
+          <DayReport
+            players={this.state.playerList.filter(this.isAlive)}
+            player={Object.assign({}, this.state.player)}
+            changePage={this.changePage}
+            changeStatus={this.changeGameStatus}
+            didIDie={this.didIDie}
+            didSomeoneWin={this.didSomeoneWin}
+            cityChose={this.state.cityChose}
+            seenInfo={this.seenInfo}
+            resetKillVotes={this.resetKillVotes}
           />
         );
 
@@ -701,7 +824,7 @@ class App extends Component {
         return (
           <WaitPage
             status={this.state.game.status}
-            players={this.state.playerList}
+            players={this.state.playerList.filter(this.isAlive)}
             player={this.state.player}
             showRole={this.showRole}
             changeStatus={this.changeGameStatus}

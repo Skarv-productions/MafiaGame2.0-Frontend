@@ -17,8 +17,6 @@ class MafiaKilled extends Component {
     this.props.seenInfo(this.ifLastMafia);
   };
 
-  // SetState update is not being noticed. Probably needs to do a onComponantUpdate and see ifLastMafia()
-
   ifLastMafia = () => {
     console.log("ifLastMafia called!");
     // Check if you were the last mafia to see
@@ -37,6 +35,7 @@ class MafiaKilled extends Component {
 
     if (numMafia === hasSeen) {
       console.log("Changing game status to doctor!");
+      this.props.resetSeenInfo();
       this.props.changeGameStatus("doctor");
     }
 
