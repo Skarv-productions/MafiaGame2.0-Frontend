@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
+import Zoom from "@material-ui/core/Zoom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
@@ -33,6 +34,9 @@ class MafiaNight extends Component {
           </Grid>
         </Slide>
 
+        <Grid item></Grid>
+        <Grid item></Grid>
+
         <Grid
           container
           direction="row"
@@ -46,6 +50,7 @@ class MafiaNight extends Component {
                 placement="top"
                 title={player.killVotes}
                 open={player.killVotes > 0}
+                TransitionComponent={Zoom}
               >
                 <Slide
                   direction="up"

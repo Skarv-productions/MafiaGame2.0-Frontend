@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
+import Zoom from "@material-ui/core/Zoom";
 
 class StartPage extends Component {
   state = {
@@ -24,10 +23,11 @@ class StartPage extends Component {
         <Grid item>
           <Typography variant="h2">Mafia Game</Typography>
         </Grid>
-
-        <Grid item>
-          <Typography variant="h6">What's your name?</Typography>
-        </Grid>
+        <Zoom in={true}>
+          <Grid item>
+            <Typography variant="h6">What's your name?</Typography>
+          </Grid>
+        </Zoom>
 
         <Grid item>
           <FormControl error={this.props.nameError.active}>

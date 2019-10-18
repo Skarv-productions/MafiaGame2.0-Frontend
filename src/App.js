@@ -710,6 +710,15 @@ class App extends Component {
         root: {
           color: "#DFD9E2"
         }
+      },
+      MuiTooltip: {
+        tooltip: {
+          animation:
+            "1000ms ease-in-out 0ms infinite normal none running testAnimate",
+          borderRadius: "15px",
+          backgroundColor: "#FFFD82",
+          color: "#191716"
+        }
       }
     },
     palette: {
@@ -751,12 +760,10 @@ class App extends Component {
 
       case "AdminPanel":
         return (
-          <React.Fragment>
-            <AdminPanel
-              startGame={this.startGame}
-              players={this.state.playerList}
-            />
-          </React.Fragment>
+          <AdminPanel
+            startGame={this.startGame}
+            players={this.state.playerList}
+          />
         );
 
       case "ShowRole":
@@ -920,6 +927,7 @@ class App extends Component {
           container
           direction="column"
           justify="center"
+          alignItems="center"
           spacing={4}
           style={{ minHeight: "98vh", textAlign: "center" }}
         >

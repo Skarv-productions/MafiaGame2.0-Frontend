@@ -5,7 +5,38 @@ body {
   height: 98vh;
   font-size: 20px;
   background-color: #191716;
+  margin: auto;
   color: "white";
   width: 98%;
   font-family: "Mansalva", cursive;
+}
+
+@-webkit-keyframes testAnimate {
+  0% {
+    -webkit-transform: rotate(5deg);
+  }
+  25% {
+    -webkit-transform: rotate(-5deg);
+  }
+  50% {
+    -webkit-transform: rotate(10deg);
+  }
+  75% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(5deg);
+  }
+}
+
+@keyframes testAnimate {
+  0% {
+    transform: translateY(-3px) rotate(10deg);
+  }
+  50% {
+    transform: translateY(3px) rotate(-10deg);
+  }
+  100% {
+    transform: translateY(-3px) rotate(10deg);
+  }
 }
