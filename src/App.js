@@ -80,7 +80,7 @@ class App extends Component {
         killVotes: 0
       },
       {
-        name: "Lol",
+        name: "LOL",
         role: "farmer",
         alive: true,
         admin: false,
@@ -198,11 +198,11 @@ class App extends Component {
         });
       }
 
-      this.setState({ playerList: newPlayerList, player: me });
-
-      if (callback) {
-        callback();
-      }
+      this.setState({ playerList: newPlayerList, player: me }, () => {
+        if (callback) {
+          callback();
+        }
+      });
     }
   };
 
@@ -214,7 +214,9 @@ class App extends Component {
     // Check if all living mafias has voted
     const numMafia = this.numMafia();
 
-    const hasVoted = this.state.playerList.filter(this.hasVoted).length;
+    const hasVoted = this.state.playerList
+      .filter(this.isAlive)
+      .filter(this.hasVoted).length;
 
     if (numMafia === hasVoted) {
       // Get max value
@@ -268,6 +270,7 @@ class App extends Component {
         majorityVote = p.name;
       }
     });
+    console.log("votesToKillNone:", this.state.votesToKillNone);
     if (this.state.votesToKillNone >= numMajority) {
       majorityAgree = true;
       majorityVote = "none";
@@ -525,17 +528,19 @@ class App extends Component {
     let farmers = this.state.playerList.slice();
     let chosen = [];
     let mafias = [];
+    let newPlayerList = [];
 
     // Assign Maffia
     for (let i = 0; i < roles.mafia; i++) {
       chosen = Math.floor(Math.random() * farmers.length);
 
       mafias.push(farmers[chosen]);
+
       farmers.splice(chosen, 1);
     }
 
     // Update state playerList with mafia roles
-    let newPlayerList = this.state.playerList.slice();
+    newPlayerList = this.state.playerList.slice();
 
     mafias.map(mafia => {
       const mafiaIndex = newPlayerList.indexOf(mafia);
@@ -543,22 +548,18 @@ class App extends Component {
       Object.assign(newPlayerList[mafiaIndex], { role: "mafia" });
     });
 
-    this.setState({ playerList: newPlayerList });
-
     // Assign Doctor
     if (roles.doctor) {
       chosen = Math.floor(Math.random() * farmers.length);
       let doctor = farmers[chosen];
+
       farmers.splice(chosen, 1);
 
-      // Update state playerList with doctor role
-      this.setState(prevState => ({
-        playerList: prevState.playerList.map(player => {
-          return player === doctor
-            ? Object.assign(player, { role: "doctor" })
-            : player;
-        })
-      }));
+      newPlayerList = newPlayerList.map(player => {
+        return player === doctor
+          ? Object.assign(player, { role: "doctor" })
+          : player;
+      });
     }
 
     // Assign Sheriff
@@ -569,15 +570,15 @@ class App extends Component {
 
       farmers.splice(chosen, 1);
 
-      // Update state playerList with doctor role
-      this.setState(prevState => ({
-        playerList: prevState.playerList.map(player => {
-          return player === sheriff
-            ? Object.assign(player, { role: "sheriff" })
-            : player;
-        })
-      }));
+      newPlayerList = newPlayerList.map(player => {
+        return player === sheriff
+          ? Object.assign(player, { role: "sheriff" })
+          : player;
+      });
     }
+
+    // Update state playerList
+    this.setState({ playerList: newPlayerList });
 
     // Update game status
     this.changeGameStatus("assigned");
@@ -651,6 +652,7 @@ class App extends Component {
     return whoWon;
   };
 
+  // This function is being called at the end of every night, either by sheriff or admin
   nightKill = () => {
     // If someone should be killed during night, then kill them
     if (this.state.mafiaChose !== this.state.doctorChose) {
