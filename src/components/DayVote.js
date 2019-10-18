@@ -9,14 +9,7 @@ class DayVote extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justify="center"
-        spacing={10}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h3">Who do you want to vote out?</Typography>
         </Grid>
@@ -36,7 +29,7 @@ class DayVote extends Component {
           spacing={4}
         >
           {this.props.players.map(player => (
-            <Grid item>
+            <Grid item key={player.name}>
               <Tooltip
                 placement="top"
                 title={player.killVotes}
@@ -85,7 +78,7 @@ class DayVote extends Component {
             </Tooltip>
           </Grid>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

@@ -13,14 +13,7 @@ class GameLobby extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        justify="center"
-        spacing={4}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h3">Game Lobby</Typography>
         </Grid>
@@ -37,7 +30,7 @@ class GameLobby extends Component {
         </Grid>
 
         {this.props.players.map(player => (
-          <Grid item>
+          <Grid item key={player.name}>
             <Typography
               color={player.admin ? "primary" : "inherit"}
               variant="h6"
@@ -46,7 +39,7 @@ class GameLobby extends Component {
             </Typography>
           </Grid>
         ))}
-      </Grid>
+      </React.Fragment>
     );
   }
 }

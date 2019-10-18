@@ -20,13 +20,7 @@ class StartPage extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        justify="center"
-        spacing={4}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h2">Mafia Game</Typography>
         </Grid>
@@ -93,7 +87,7 @@ class StartPage extends Component {
             Join Game
           </Button>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

@@ -139,18 +139,11 @@ class NightMode extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        justify="center"
-        spacing={4}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h3">Go to sleep</Typography>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

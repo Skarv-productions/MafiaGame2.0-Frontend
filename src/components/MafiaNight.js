@@ -4,6 +4,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 
+import { makeStyles } from "@material-ui/core/styles";
+import Slide from "@material-ui/core/Slide";
+
 class MafiaNight extends Component {
   state = {};
 
@@ -14,18 +17,21 @@ class MafiaNight extends Component {
   }
 
   render() {
+    let i = 0;
+
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justify="center"
-        spacing={10}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
-        <Grid item>
-          <Typography variant="h3">Who do you want to kill?</Typography>
-        </Grid>
+      <React.Fragment>
+        <Slide
+          direction="up"
+          in={true}
+          style={{ transitionDelay: "" + i++ * 200 + "ms" }}
+          mountOnEnter
+          unmountOnExit
+        >
+          <Grid item>
+            <Typography variant="h3">Who do you want to kill?</Typography>
+          </Grid>
+        </Slide>
 
         <Grid
           container
@@ -35,31 +41,39 @@ class MafiaNight extends Component {
           spacing={4}
         >
           {this.props.players.map(player => (
-            <Grid item>
+            <Grid item key={player.name}>
               <Tooltip
                 placement="top"
                 title={player.killVotes}
                 open={player.killVotes > 0}
               >
-                <Button
-                  variant="contained"
-                  size="large"
-                  color={
-                    player.name === this.props.player.wantsToKill
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() => {
-                    this.props.wantsToKill(player, this.props.doesMafiaAgree);
-                  }}
+                <Slide
+                  direction="up"
+                  in={true}
+                  style={{ transitionDelay: "" + i++ * 200 + "ms" }}
+                  mountOnEnter
+                  unmountOnExit
                 >
-                  {player.name}
-                </Button>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    color={
+                      player.name === this.props.player.wantsToKill
+                        ? "primary"
+                        : "secondary"
+                    }
+                    onClick={() => {
+                      this.props.wantsToKill(player, this.props.doesMafiaAgree);
+                    }}
+                  >
+                    {player.name}
+                  </Button>
+                </Slide>
               </Tooltip>
             </Grid>
           ))}
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

@@ -45,14 +45,7 @@ class DayReport extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        justify="center"
-        spacing={4}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h4">
             The city decided to{" "}
@@ -72,7 +65,7 @@ class DayReport extends Component {
             OK
           </Button>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

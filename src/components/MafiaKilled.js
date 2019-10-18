@@ -44,14 +44,7 @@ class MafiaKilled extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        justify="center"
-        spacing={4}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h4">
             The mafia chose {this.props.mafiaChose} to be killed
@@ -68,7 +61,7 @@ class MafiaKilled extends Component {
             OK
           </Button>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

@@ -4,7 +4,8 @@ html,
 body {
   height: 98vh;
   font-size: 20px;
-  background-color: #bea5ab;
+  background-color: #191716;
+  color: "white";
   width: 98%;
   font-family: "Mansalva", cursive;
 }

@@ -49,7 +49,11 @@ class AdminPanel extends Component {
 
     if (players > 2) {
       for (let i = 2; i <= Math.ceil(players / 2) - 1; i++) {
-        menuItems.push(<MenuItem value={i}>{this.state.numbers[i]}</MenuItem>);
+        menuItems.push(
+          <MenuItem key={i} value={i}>
+            {this.state.numbers[i]}
+          </MenuItem>
+        );
       }
     }
 
@@ -58,14 +62,7 @@ class AdminPanel extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justify="center"
-        spacing={4}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h4">Choose roles</Typography>
         </Grid>
@@ -131,7 +128,7 @@ class AdminPanel extends Component {
             </span>
           </Tooltip>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

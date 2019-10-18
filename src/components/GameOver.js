@@ -9,14 +9,7 @@ class MafiaKilled extends Component {
   render() {
     const whoWon = this.props.whoWon;
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        justify="center"
-        spacing={4}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h2">Game Over</Typography>
         </Grid>
@@ -26,7 +19,7 @@ class MafiaKilled extends Component {
             {whoWon ? "The " + whoWon + " won!" : "You were killed!"}
           </Typography>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

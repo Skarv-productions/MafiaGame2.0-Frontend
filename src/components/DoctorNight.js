@@ -15,14 +15,7 @@ class DoctorNight extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justify="center"
-        spacing={10}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h3">
             {
@@ -40,7 +33,7 @@ class DoctorNight extends Component {
           spacing={4}
         >
           {this.props.players.map(player => (
-            <Grid item>
+            <Grid item key={player.name}>
               <Button
                 variant="contained"
                 size="large"
@@ -54,7 +47,7 @@ class DoctorNight extends Component {
             </Grid>
           ))}
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

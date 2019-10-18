@@ -49,14 +49,7 @@ class WaitPage extends Component {
 
   render() {
     return (
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        justify="center"
-        spacing={4}
-        style={{ minHeight: "98vh", textAlign: "center" }}
-      >
+      <React.Fragment>
         <Grid item>
           <Typography variant="h5">Waiting for other players</Typography>
         </Grid>
@@ -64,7 +57,7 @@ class WaitPage extends Component {
         <Grid item>
           <img src={LoadSvg} alt="Load SVG" />
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

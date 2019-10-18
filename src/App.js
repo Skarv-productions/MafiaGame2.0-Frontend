@@ -17,8 +17,11 @@ import DayVote from "./components/DayVote";
 import RandomString from "random-string";
 import WaitPage from "./components/WaitPage";
 import GameOver from "./components/GameOver";
+import Grid from "@material-ui/core/Grid";
+
 import axios from "axios";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
 import "./App.css";
 
 /* ------- DOCUMENTATION -------
@@ -692,7 +695,38 @@ class App extends Component {
     this.resetKillVotes();
   };
 
-  render() {
+  //----------------
+  // STYLING
+  //----------------
+
+  theme = createMuiTheme({
+    overrides: {
+      MuiButton: {
+        contained: {
+          borderRadius: "25px"
+        }
+      },
+      MuiTypography: {
+        root: {
+          color: "#DFD9E2"
+        }
+      }
+    },
+    palette: {
+      primary: {
+        main: "#26547C"
+      },
+      secondary: {
+        main: "#D04E46"
+      },
+      default: {
+        main: "#FFFD82"
+      },
+      type: "dark"
+    }
+  });
+
+  gameComponents = () => {
     switch (this.state.page) {
       case "StartPage":
         return (
@@ -877,6 +911,22 @@ class App extends Component {
           />
         );
     }
+  };
+
+  render() {
+    return (
+      <ThemeProvider theme={this.theme}>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          spacing={4}
+          style={{ minHeight: "98vh", textAlign: "center" }}
+        >
+          {this.gameComponents()}
+        </Grid>
+      </ThemeProvider>
+    );
   }
 }
 
