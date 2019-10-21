@@ -18,6 +18,7 @@ import RandomString from "random-string";
 import WaitPage from "./components/WaitPage";
 import GameOver from "./components/GameOver";
 import Grid from "@material-ui/core/Grid";
+import Zoom from "@material-ui/core/Zoom";
 
 import axios from "axios";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -84,6 +85,51 @@ class App extends Component {
       },
       {
         name: "LOL",
+        role: "farmer",
+        alive: true,
+        admin: false,
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
+      },
+      {
+        name: "KEBAB",
+        role: "farmer",
+        alive: true,
+        admin: false,
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
+      },
+      {
+        name: "KEBAB",
+        role: "farmer",
+        alive: true,
+        admin: false,
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
+      },
+      {
+        name: "KEBAB",
+        role: "farmer",
+        alive: true,
+        admin: false,
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
+      },
+      {
+        name: "KEBAB",
+        role: "farmer",
+        alive: true,
+        admin: false,
+        seenInfo: true,
+        wantsToKill: "",
+        killVotes: 0
+      },
+      {
+        name: "KEBAB",
         role: "farmer",
         alive: true,
         admin: false,
@@ -701,6 +747,13 @@ class App extends Component {
 
   theme = createMuiTheme({
     overrides: {
+      root: {},
+      MuiGrid: {
+        "spacing-xs-4": {
+          width: "100%",
+          margin: "auto"
+        }
+      },
       MuiButton: {
         contained: {
           borderRadius: "25px"
@@ -715,9 +768,18 @@ class App extends Component {
         tooltip: {
           animation:
             "1000ms ease-in-out 0ms infinite normal none running testAnimate",
-          borderRadius: "15px",
+          borderRadius: "20px",
+          margin: "0px",
           backgroundColor: "#FFFD82",
-          color: "#191716"
+          color: "#191716",
+          padding: "4px 9px"
+        },
+        touch: {
+          maxWidth: "25px",
+          padding: "3px 8px"
+        },
+        tooltipPlacementTop: {
+          margin: "7px"
         }
       }
     },
@@ -739,13 +801,15 @@ class App extends Component {
     switch (this.state.page) {
       case "StartPage":
         return (
-          <StartPage
-            createGame={this.createGame}
-            nameError={this.state.nameError}
-            codeError={this.state.codeError}
-            joinGame={this.joinGame}
-            player={this.state.player}
-          />
+          <Zoom in={true} style={{ transitionDelay: "100ms" }}>
+            <StartPage
+              createGame={this.createGame}
+              nameError={this.state.nameError}
+              codeError={this.state.codeError}
+              joinGame={this.joinGame}
+              player={this.state.player}
+            />
+          </Zoom>
         );
 
       case "GameLobby":
