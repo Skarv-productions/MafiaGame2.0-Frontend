@@ -26,7 +26,7 @@ class DayVote extends Component {
           direction="row"
           alignItems="center"
           justify="center"
-          spacing={4}
+          spacing={2}
         >
           {this.props.players.map(player => (
             <Grid item key={player.name}>

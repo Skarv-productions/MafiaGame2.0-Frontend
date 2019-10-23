@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import FirstPage from "./components/FirstPage";
 import StartPage from "./components/StartPage";
 import GameLobby from "./components/GameLobby";
 import AdminPanel from "./components/AdminPanel";
@@ -45,7 +46,7 @@ test2
 
 class App extends Component {
   state = {
-    page: "StartPage",
+    page: "FirstPage",
     player: {
       name: "",
       role: "",
@@ -776,7 +777,9 @@ class App extends Component {
         },
         touch: {
           maxWidth: "25px",
-          padding: "3px 8px"
+          padding: "3px 8px",
+          fontSize: "15px",
+          fontWeight: "500"
         },
         tooltipPlacementTop: {
           margin: "7px"
@@ -799,6 +802,9 @@ class App extends Component {
 
   gameComponents = () => {
     switch (this.state.page) {
+      case "FirstPage":
+        return <FirstPage changePage={this.changePage} />;
+
       case "StartPage":
         return (
           <Zoom in={true} style={{ transitionDelay: "100ms" }}>
@@ -973,14 +979,7 @@ class App extends Component {
         return <GameOver whoWon={this.didSomeoneWin()} />;
 
       default:
-        return (
-          <StartPage
-            createGame={this.createGame}
-            nameError={this.state.nameError}
-            codeError={this.state.codeError}
-            joinGame={this.joinGame}
-          />
-        );
+        return this.setState({ page: "FirstPage" });
     }
   };
 
