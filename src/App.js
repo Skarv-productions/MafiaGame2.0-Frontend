@@ -116,12 +116,41 @@ class App extends Component {
 
   componentDidMount() {
     axios({
-      method: "get",
-      url:
-        "https://3x2af729ag.execute-api.us-east-2.amazonaws.com/test/gamelist"
+      method: 'post',
+      url: 'https://52pkbycrgl.execute-api.eu-west-1.amazonaws.com/prod/postnewgame',
+      headers: {
+        'Content-Type': "application/json"
+      },
+      data: {
+        code: "xxxx", 
+        status: "Open",
+        playerList: [{
+          name: "xxxx",
+          admin: true
+          }
+        ]
+      }
     })
-      .then(response => console.log(response))
-      .catch(err => console.log(err));
+      .then(response =>(
+        console.log(response.status)
+      ))
+      .catch(err => console.log(err))
+
+    axios({
+      method: 'post',
+      url: 'https://52pkbycrgl.execute-api.eu-west-1.amazonaws.com/prod/postjoingame',
+      headers: {
+        'Content-Type': "application/json"
+      },
+      data: {
+        code: "qwer",
+        name: "Douglas"      
+      }
+    })
+      .then(response =>(
+        console.log(response.status)
+      ))
+      .catch(err => console.log(err))
   }
 
   changePage = page => {
