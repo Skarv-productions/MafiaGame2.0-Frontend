@@ -6,6 +6,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Input from "@material-ui/core/Input";
 import Slide from "@material-ui/core/Slide";
+import CreateOrJoin from "./CreateOrJoin";
 
 class StartPage extends Component {
   state = {
@@ -26,70 +27,6 @@ class StartPage extends Component {
   };
 
   render() {
-    const buttonFragment = this.state.showButtons ? (
-      <React.Fragment>
-        {/* <Slide in={true} direction="up">
-          <Grid item>
-            <Typography variant="h6">
-              Do you want to create a new game
-            </Typography>
-          </Grid>
-        </Slide> */}
-
-        <Slide in={true} direction="up">
-          <Grid item>
-            <Button
-              variant="contained"
-              size="large"
-              color="primary"
-              onClick={() => {
-                this.props.createGame(this.state.name);
-              }}
-            >
-              Create New Game
-            </Button>
-          </Grid>
-        </Slide>
-
-        {/* <Slide in={true} direction="up">
-          <Grid item>
-            <Typography variant="h6">or join an existing game?</Typography>
-          </Grid>
-        </Slide> */}
-
-        <Slide in={true} direction="up">
-          <Grid item>
-            <FormControl error={this.props.codeError.active}>
-              <Input
-                id="component-error"
-                placeholder="Write game code here"
-                onChange={this.onChange}
-                name="code"
-              />
-              <FormHelperText>{this.props.codeError.text}</FormHelperText>
-            </FormControl>
-          </Grid>
-        </Slide>
-
-        <Slide in={true} direction="up">
-          <Grid item>
-            <Button
-              variant="contained"
-              size="large"
-              color="primary"
-              onClick={() => {
-                this.props.joinGame(this.state.code, this.state.name);
-              }}
-            >
-              Join Existing Game
-            </Button>
-          </Grid>
-        </Slide>
-      </React.Fragment>
-    ) : (
-      ""
-    );
-
     return (
       <Grid
         container
@@ -119,7 +56,15 @@ class StartPage extends Component {
             </FormControl>
           </Grid>
         </Slide>
-        {buttonFragment}
+        <CreateOrJoin
+          createGame={this.props.createGame}
+          nameError={this.props.nameError}
+          codeError={this.props.codeError}
+          joinGame={this.props.joinGame}
+          onChange={this.onChange}
+          name={this.state.name}
+          code={this.state.code}
+        />
       </Grid>
     );
   }
