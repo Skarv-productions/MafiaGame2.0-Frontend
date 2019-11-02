@@ -27,7 +27,7 @@ class CreateOrJoin extends Component {
               size="large"
               color="primary"
               onClick={() => {
-                this.props.createGame(this.state.name);
+                this.props.createGame(this.props.name);
               }}
             >
               Create New Game

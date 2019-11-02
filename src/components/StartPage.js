@@ -56,15 +56,17 @@ class StartPage extends Component {
             </FormControl>
           </Grid>
         </Slide>
-        <CreateOrJoin
-          createGame={this.props.createGame}
-          nameError={this.props.nameError}
-          codeError={this.props.codeError}
-          joinGame={this.props.joinGame}
-          onChange={this.onChange}
-          name={this.state.name}
-          code={this.state.code}
-        />
+        {this.state.showButtons && (
+          <CreateOrJoin
+            createGame={this.props.createGame}
+            nameError={this.props.nameError}
+            codeError={this.props.codeError}
+            joinGame={this.props.joinGame}
+            onChange={this.onChange}
+            name={this.state.name}
+            code={this.state.code}
+          />
+        )}
       </Grid>
     );
   }
