@@ -35,12 +35,20 @@ class StartPage extends Component {
         alignItems="center"
         spacing={4}
       >
-        <Slide in={true} direction="up">
+        <Slide
+          in={this.props.transition.in}
+          direction="up"
+          timeout={this.props.transition.timeout}
+        >
           <Grid item>
             <Typography variant="h6">What's your name?</Typography>
           </Grid>
         </Slide>
-        <Slide in={true} direction="up">
+        <Slide
+          in={this.props.transition.in}
+          direction="up"
+          timeout={this.props.transition.timeout}
+        >
           <Grid item>
             <FormControl error={this.props.nameError.active}>
               <Input
@@ -65,6 +73,7 @@ class StartPage extends Component {
             onChange={this.onChange}
             name={this.state.name}
             code={this.state.code}
+            transition={this.props.transition}
           />
         )}
       </Grid>

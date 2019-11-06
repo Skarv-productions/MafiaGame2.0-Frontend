@@ -161,7 +161,8 @@ class App extends Component {
     cityChose: "",
     votesToKillNone: 0,
     nameError: { active: false, text: "" },
-    codeError: { active: false, text: "" }
+    codeError: { active: false, text: "" },
+    transition: { in: true, timeout: 500 }
   };
 
   componentDidMount() {
@@ -203,8 +204,11 @@ class App extends Component {
       .catch(err => console.log(err))
   }
 
-  changePage = page => {
-    this.setState({ page: page });
+  changePage = (page, sender) => {
+    this.setState({ transition: { in: false, timeout: 500 } });
+    setTimeout(() => {
+      this.setState({ page: page, transition: { in: true, timeout: 500 } });
+    }, this.state.transition.timeout);
   };
 
   changeGameStatus = status => {
@@ -481,7 +485,8 @@ class App extends Component {
       });
 
       // Save our game in state and move on
-      this.setState({ game: game, page: "AdminPanel" });
+      this.setState({ game: game });
+      this.changePage("AdminPanel");
     }
   };
 
@@ -807,15 +812,14 @@ class App extends Component {
 
       case "StartPage":
         return (
-          <Zoom in={true} style={{ transitionDelay: "100ms" }}>
-            <StartPage
-              createGame={this.createGame}
-              nameError={this.state.nameError}
-              codeError={this.state.codeError}
-              joinGame={this.joinGame}
-              player={this.state.player}
-            />
-          </Zoom>
+          <StartPage
+            createGame={this.createGame}
+            nameError={this.state.nameError}
+            codeError={this.state.codeError}
+            joinGame={this.joinGame}
+            player={this.state.player}
+            transition={this.state.transition}
+          />
         );
 
       case "GameLobby":

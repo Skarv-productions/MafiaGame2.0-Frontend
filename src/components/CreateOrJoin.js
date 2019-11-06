@@ -20,7 +20,11 @@ class CreateOrJoin extends Component {
           </Grid>
         </Slide> */}
 
-        <Slide in={true} direction="up">
+        <Slide
+          in={this.props.transition.in}
+          direction="up"
+          timeout={this.props.transition.timeout}
+        >
           <Grid item>
             <Button
               variant="contained"
@@ -43,7 +47,11 @@ class CreateOrJoin extends Component {
         <Grid item></Grid>
         <Grid item></Grid>
 
-        <Slide in={true} direction="up">
+        <Slide
+          in={this.props.transition.in}
+          direction="up"
+          timeout={this.props.transition.timeout}
+        >
           <Grid item>
             <FormControl error={this.props.codeError.active}>
               <Input
@@ -57,7 +65,11 @@ class CreateOrJoin extends Component {
           </Grid>
         </Slide>
 
-        <Slide in={true} direction="up">
+        <Slide
+          in={this.props.transition.in}
+          direction="up"
+          timeout={this.props.transition.timeout}
+        >
           <Grid item>
             <Button
               variant="contained"
