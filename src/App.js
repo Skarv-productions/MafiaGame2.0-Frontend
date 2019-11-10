@@ -204,8 +204,10 @@ class App extends Component {
       .catch(err => console.log(err))
   }
 
-  changePage = (page, sender) => {
+  changePage = page => {
     this.setState({ transition: { in: false, timeout: 500 } });
+
+    // Error here because componentUpdate loop
     setTimeout(() => {
       this.setState({ page: page, transition: { in: true, timeout: 500 } });
     }, this.state.transition.timeout);
