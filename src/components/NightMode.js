@@ -39,8 +39,11 @@ class NightMode extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
+    if (prevProps.game.status !== this.props.game.status) {
+      console.log("Status changed!");
       this.checkStatus();
+    } else {
+      console.log("Status not changed");
     }
   }
 

@@ -11,7 +11,9 @@ class WaitPage extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.statusCheck();
+    if (prevProps.status !== this.props.status) {
+      this.statusCheck();
+    }
   }
 
   statusCheck = () => {

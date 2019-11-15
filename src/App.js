@@ -167,41 +167,40 @@ class App extends Component {
 
   componentDidMount() {
     axios({
-      method: 'post',
-      url: 'https://52pkbycrgl.execute-api.eu-west-1.amazonaws.com/prod/postnewgame',
+      method: "post",
+      url:
+        "https://52pkbycrgl.execute-api.eu-west-1.amazonaws.com/prod/postnewgame",
       headers: {
-        'Content-Type': "application/json"
+        "Content-Type": "application/json"
       },
       data: {
-        code: "xxxx", 
+        code: "xxxx",
         status: "Open",
-        playerList: [{
-          name: "xxxx",
-          admin: true
+        playerList: [
+          {
+            name: "xxxx",
+            admin: true
           }
         ]
       }
     })
-      .then(response =>(
-        console.log(response.status)
-      ))
-      .catch(err => console.log(err))
+      .then(response => console.log(response.status))
+      .catch(err => console.log(err));
 
     axios({
-      method: 'post',
-      url: 'https://52pkbycrgl.execute-api.eu-west-1.amazonaws.com/prod/postjoingame',
+      method: "post",
+      url:
+        "https://52pkbycrgl.execute-api.eu-west-1.amazonaws.com/prod/postjoingame",
       headers: {
-        'Content-Type': "application/json"
+        "Content-Type": "application/json"
       },
       data: {
         code: "qwer",
-        name: "Douglas"      
+        name: "Douglas"
       }
     })
-      .then(response =>(
-        console.log(response.status)
-      ))
-      .catch(err => console.log(err))
+      .then(response => console.log(response.status))
+      .catch(err => console.log(err));
   }
 
   changePage = page => {
@@ -856,7 +855,7 @@ class App extends Component {
           <NightMode
             admin={this.state.player.admin}
             changeStatus={this.changeGameStatus}
-            game={this.state.game}
+            game={Object.assign({}, this.state.game)}
             changePage={this.changePage}
             player={this.state.player}
             players={this.state.playerList.filter(this.isAlive)}
