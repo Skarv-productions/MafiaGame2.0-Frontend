@@ -809,7 +809,12 @@ class App extends Component {
   gameComponents = () => {
     switch (this.state.page) {
       case "FirstPage":
-        return <FirstPage changePage={this.changePage} />;
+        return (
+          <FirstPage
+            changePage={this.changePage}
+            transition={this.state.transition}
+          />
+        );
 
       case "StartPage":
         return (
@@ -838,6 +843,7 @@ class App extends Component {
           <AdminPanel
             startGame={this.startGame}
             players={this.state.playerList}
+            transition={this.state.transition}
           />
         );
 
@@ -847,6 +853,7 @@ class App extends Component {
             player={this.state.player}
             next={this.seenInfo}
             wait={this.wait}
+            transition={this.state.transition}
           />
         );
 
