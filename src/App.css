@@ -9,7 +9,7 @@ body {
   color: "white";
   width: 98%;
   font-family: "Mansalva", cursive;
-}
+};
 
 @-webkit-keyframes testAnimate {
   0% {
