@@ -16,7 +16,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "deploy": "react-scripts build && aws s3 sync build/ s3://git-to-amazon-s3-outputbucket-1nf74r4f5djgg",
+    "deploy": "react-scripts build && aws s3 sync build/ s3://mafiagame.org",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
