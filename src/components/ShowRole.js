@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Zoom from "@material-ui/core/Zoom";
+import Slide from "@material-ui/core/slide";
 
 class ShowRole extends Component {
   state = {};
@@ -11,15 +12,16 @@ class ShowRole extends Component {
   render() {
     return (
       <React.Fragment>
-        <Zoom
+        <Slide
           in={this.props.transition.in}
           timeout={this.props.transition.timeout}
+          direction="left"
           unmountOnExit
         >
           <Grid item>
             <Typography variant="h5">You are a</Typography>
           </Grid>
-        </Zoom>
+        </Slide>
 
         <Zoom
           in={this.props.transition.in}
@@ -38,9 +40,10 @@ class ShowRole extends Component {
           </Grid>
         </Zoom>
 
-        <Zoom
+        <Slide
           in={this.props.transition.in}
           timeout={this.props.transition.timeout}
+          direction="right"
           unmountOnExit
         >
           <Grid item>
@@ -55,7 +58,7 @@ class ShowRole extends Component {
               OK
             </Button>
           </Grid>
-        </Zoom>
+        </Slide>
       </React.Fragment>
     );
   }

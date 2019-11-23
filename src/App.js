@@ -867,6 +867,7 @@ class App extends Component {
             player={this.state.player}
             players={this.state.playerList.filter(this.isAlive)}
             nightKill={this.nightKill}
+            transition={this.state.transition}
           />
         );
 
@@ -879,7 +880,7 @@ class App extends Component {
             players={this.state.playerList.filter(this.isAlive)}
             wantsToKill={this.wantsToKill}
             player={this.state.player}
-            game={this.state.game}
+            game={Object.assign({}, this.state.game)}
             changePage={this.changePage}
             doesMafiaAgree={this.doesMafiaAgree}
           />

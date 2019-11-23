@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Zoom from "@material-ui/core/Zoom";
 import WakeCity from "../audio/WakeCity.mp3";
 import SleepCity from "../audio/SleepCity.mp3";
 import WakeMafia from "../audio/WakeMafia.mp3";
@@ -143,9 +144,15 @@ class NightMode extends Component {
   render() {
     return (
       <React.Fragment>
-        <Grid item>
-          <Typography variant="h3">Go to sleep</Typography>
-        </Grid>
+        <Zoom
+          in={this.props.transition.in}
+          timeout={this.props.transition.timeout}
+          unmountOnExit
+        >
+          <Grid item>
+            <Typography variant="h3">Go to sleep</Typography>
+          </Grid>
+        </Zoom>
       </React.Fragment>
     );
   }

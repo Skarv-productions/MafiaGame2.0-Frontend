@@ -11,8 +11,11 @@ import Slide from "@material-ui/core/Slide";
 class MafiaNight extends Component {
   state = {};
 
-  componentDidUpdate() {
-    if (this.props.game.status === "mafiaDone") {
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.game.status !== prevProps.game.status &&
+      this.props.game.status === "mafiaDone"
+    ) {
       this.props.changePage("MafiaKilled");
     }
   }

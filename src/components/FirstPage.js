@@ -11,12 +11,7 @@ class FirstPage extends Component {
     let i = 0;
     return (
       <React.Fragment>
-        <Zoom
-          in={this.props.transition.in}
-          style={{ transitionDelay: "" + i++ * 200 + "ms" }}
-          mountOnEnter
-          unmountOnExit
-        >
+        <Zoom in={this.props.transition.in} mountOnEnter unmountOnExit>
           <Grid item>
             <Typography variant="h2">MAFIA GAME</Typography>
           </Grid>
@@ -24,12 +19,7 @@ class FirstPage extends Component {
 
         <Grid item></Grid>
 
-        <Zoom
-          in={this.props.transition.in}
-          style={{ transitionDelay: "" + i++ * 200 + "ms" }}
-          mountOnEnter
-          unmountOnExit
-        >
+        <Zoom in={this.props.transition.in} mountOnEnter unmountOnExit>
           <Grid item>
             <Button
               variant="contained"
@@ -44,12 +34,7 @@ class FirstPage extends Component {
           </Grid>
         </Zoom>
 
-        <Zoom
-          in={this.props.transition.in}
-          style={{ transitionDelay: "" + i++ * 200 + "ms" }}
-          mountOnEnter
-          unmountOnExit
-        >
+        <Zoom in={this.props.transition.in} mountOnEnter unmountOnExit>
           <Grid item>
             <Button
               variant="contained"
